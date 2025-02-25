@@ -13,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Client {
-    //todo вынести в конфиг файл
     private final String host;
+
     private final int port;
 
     public Client(String host, int port) {
@@ -59,6 +59,7 @@ public class Client {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new Client("localhost", 8080).run();
+        Config config = new Config("src/main/resources/application.properties");
+        new Client(config.getHost(), config.getPort()).run();
     }
 }
