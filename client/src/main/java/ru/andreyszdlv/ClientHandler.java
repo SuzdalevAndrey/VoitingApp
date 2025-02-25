@@ -7,8 +7,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) {
-        System.out.println("\n💬 Ответ от сервера: " + msg);
-        System.out.print("> ");
+        System.out.println("Ответ от сервера: " + msg);
     }
 
     @Override

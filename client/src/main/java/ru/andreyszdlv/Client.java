@@ -3,13 +3,16 @@ package ru.andreyszdlv;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-
 public class Client {
-
     //todo вынести в конфиг файл
     private final String host;
     private final int port;
@@ -26,10 +29,15 @@ public class Client {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group)
                     .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<Channel>() {
+                    .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(Channel ch) {
-                            ch.pipeline().addLast(new ClientHandler());
+                        protected void initChannel(SocketChannel ch) {
+                            ch.pipeline().addLast(
+                                    new LineBasedFrameDecoder(1024),
+                                    new StringDecoder(StandardCharsets.UTF_8),
+                                    new StringEncoder(StandardCharsets.UTF_8),
+                                    new ClientHandler()
+                            );
                         }
                     });
 
@@ -39,10 +47,8 @@ public class Client {
             Scanner scanner = new Scanner(System.in);
             //todo вынести в отдельный файл обработку
             while (true) {
-                System.out.print("> ");
                 String command = scanner.nextLine();
                 if ("exit".equalsIgnoreCase(command)) break;
-
                 future.channel().writeAndFlush(command + "\n");
             }
 
