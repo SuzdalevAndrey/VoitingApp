@@ -19,26 +19,16 @@ public class Server {
         this.port = port;
     }
 
-    public void run() throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
+        new Server(new Config("application.properties").getPort()).run();
+    }
 
+    public void run() throws InterruptedException {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel socketChannel) {
-                            socketChannel.pipeline().addLast(
-                                    new LineBasedFrameDecoder(1024),
-                                    new StringDecoder(StandardCharsets.UTF_8),
-                                    new StringEncoder(StandardCharsets.UTF_8),
-                                    new ServerHandler()
-                            );
-                        }
-                    });
+            ServerBootstrap bootstrap = createBootstrap(bossGroup, workerGroup);
 
             ChannelFuture future = bootstrap.bind(port).sync();
             System.out.println("Сервер запущен на порту " + port);
@@ -47,10 +37,21 @@ public class Server {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
-
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        new Server(8080).run();
+    private ServerBootstrap createBootstrap(EventLoopGroup bossGroup, EventLoopGroup workerGroup) {
+        return new ServerBootstrap().group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel socketChannel) {
+                        socketChannel.pipeline().addLast(
+                                new LineBasedFrameDecoder(1024),
+                                new StringDecoder(StandardCharsets.UTF_8),
+                                new StringEncoder(StandardCharsets.UTF_8),
+                                new ServerHandler()
+                        );
+                    }
+                });
     }
 }
