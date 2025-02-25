@@ -7,12 +7,12 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) {
-        System.out.println("Ответ от сервера: " + msg);
+        System.out.println("Получено сообщение: " + msg);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        System.err.println("Произошла ошибка");
         ctx.close();
     }
 }
