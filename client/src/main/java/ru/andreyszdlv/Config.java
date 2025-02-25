@@ -3,8 +3,7 @@ package ru.andreyszdlv;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 @Getter
@@ -14,14 +13,18 @@ public class Config {
 
     private int port;
 
-    public Config(String propertiesFilePath) {
+    public Config(String propertiesFileName) {
         Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream(propertiesFilePath)) {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFileName)) {
+            if (input == null) {
+                System.err.println("Файл конфигурации не найден");
+                return;
+            }
             properties.load(input);
             this.host = properties.getProperty("server.host");
             this.port = Integer.parseInt(properties.getProperty("server.port"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Ошибка при чтении файла конфигурации: " + e.getMessage());
         }
     }
 }
