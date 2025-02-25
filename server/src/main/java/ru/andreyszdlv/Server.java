@@ -19,6 +19,10 @@ public class Server {
         this.port = port;
     }
 
+    public static void main(String[] args) throws InterruptedException {
+        new Server(new Config("application.properties").getPort()).run();
+    }
+
     public void run() throws InterruptedException {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -48,9 +52,5 @@ public class Server {
             workerGroup.shutdownGracefully();
         }
 
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        new Server(8080).run();
     }
 }
