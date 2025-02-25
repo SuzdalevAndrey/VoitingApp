@@ -10,47 +10,33 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 public class Client {
     private final String host;
 
     private final int port;
 
-    public Client(String host, int port) {
+    private final UserInputHandler userInputHandler;
+
+    public Client(String host, int port, UserInputHandler userInputHandler) {
         this.host = host;
         this.port = port;
+        this.userInputHandler = userInputHandler;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Config config = new Config("application.properties");
+        new Client(config.getHost(), config.getPort(), new ConsoleUserInputHandler()).run();
     }
 
     public void run() throws InterruptedException {
         EventLoopGroup group = new NioEventLoopGroup();
 
         try {
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) {
-                            ch.pipeline().addLast(
-                                    new LineBasedFrameDecoder(1024),
-                                    new StringDecoder(StandardCharsets.UTF_8),
-                                    new StringEncoder(StandardCharsets.UTF_8),
-                                    new ClientHandler()
-                            );
-                        }
-                    });
+            Bootstrap bootstrap = createBootstrap(group);
+            ChannelFuture future = connect(bootstrap, host, port).sync();
 
-            ChannelFuture future = bootstrap.connect(host, port).sync();
-            System.out.println("Подключено к серверу " + host + ":" + port);
-
-            Scanner scanner = new Scanner(System.in);
-            //todo вынести в отдельный файл обработку
-            while (true) {
-                String command = scanner.nextLine();
-                if ("exit".equalsIgnoreCase(command)) break;
-                future.channel().writeAndFlush(command + "\n");
-            }
+            userInputHandler.handle(future);
 
             future.channel().closeFuture().sync();
         } finally {
@@ -58,8 +44,33 @@ public class Client {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Config config = new Config("src/main/resources/application.properties");
-        new Client(config.getHost(), config.getPort()).run();
+    private Bootstrap createBootstrap(EventLoopGroup group) {
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(group)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) {
+                        ch.pipeline().addLast(
+                                new LineBasedFrameDecoder(1024),
+                                new StringDecoder(StandardCharsets.UTF_8),
+                                new StringEncoder(StandardCharsets.UTF_8),
+                                new ClientHandler()
+                        );
+                    }
+                });
+        return bootstrap;
+    }
+
+    private ChannelFuture connect(Bootstrap bootstrap, String host, int port) {
+        try{
+            ChannelFuture future = bootstrap.connect(host, port).sync();
+            System.out.println("Подключение установлено");
+            return future;
+        }
+        catch (Exception e) {
+            System.err.println("Не удалось подключиться");
+            throw new RuntimeException(e);
+        }
     }
 }
