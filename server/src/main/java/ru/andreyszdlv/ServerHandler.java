@@ -14,4 +14,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
         commandDispatcher.dispatch(command, ctx);
     }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        commandDispatcher.dispatch("logout", ctx);
+    }
 }

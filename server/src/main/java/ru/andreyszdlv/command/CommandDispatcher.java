@@ -12,6 +12,7 @@ public class CommandDispatcher {
     public CommandDispatcher() {
         //todo файл конфигурации
         commands.put("login", new LoginCommand());
+        commands.put("logout", new LogoutCommand());
     }
 
     public void dispatch(String command, ChannelHandlerContext ctx) {

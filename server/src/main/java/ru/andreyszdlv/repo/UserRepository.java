@@ -16,4 +16,8 @@ public class UserRepository {
     public boolean containsUserName(String username) {
         return users.containsValue(username);
     }
+
+    public String removeUser(Channel channel) {
+        return users.remove(channel);
+    }
 }
