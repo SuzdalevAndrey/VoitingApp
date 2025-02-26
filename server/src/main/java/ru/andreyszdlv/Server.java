@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import ru.andreyszdlv.config.ServerConfiguration;
 
 import java.nio.charset.StandardCharsets;
 
@@ -20,7 +21,7 @@ public class Server {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new Server(new Config("application.properties").getPort()).run();
+        new Server(new ServerConfiguration("application.properties").getPort()).run();
     }
 
     public void run() throws InterruptedException {
