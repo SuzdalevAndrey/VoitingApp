@@ -13,14 +13,14 @@ public class CommandDispatcher {
         //todo файл конфигурации
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
+        commands.put("create topic", new CreateTopicCommand());
     }
 
     public void dispatch(String fullCommand, ChannelHandlerContext ctx) {
-        //todo сделать нормальное разбиение на команды
         String[] parts = fullCommand.split(" ");
         String command = "create".equals(parts[0])?parts[0]+" "+parts[1]:parts[0];
         Command cmd = commands.getOrDefault(command,
                 (c, p) -> ctx.writeAndFlush("Неизвестная команда: " + parts[0] + "\n"));
-        cmd.execute(ctx, command);
+        cmd.execute(ctx, parts);
     }
 }
