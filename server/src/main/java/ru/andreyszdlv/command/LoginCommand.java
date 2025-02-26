@@ -9,14 +9,18 @@ public class LoginCommand implements Command {
 
     @Override
     public void execute(ChannelHandlerContext ctx, String command) {
-//        if (command.startsWith("") < 2) {
-//            ctx.writeAndFlush("Ошибка: укажите имя пользователя. Пример: login -u=User123\n");
-//            return;
-//        }
-//        String[] username = command.split("=");
-//
-//        String username = parts[1].split("=")[1];
-//        users.put(ctx.channel().remoteAddress().toString(), username);
-//        ctx.writeAndFlush("Пользователь " + username + " вошел в систему!\n");
+        if (!command.startsWith("login -u=")) {
+            ctx.writeAndFlush("Ошибка: неверная команда. Пример: login -u=user\n");
+            return;
+        }
+        String username = command.split("=")[0];
+
+        if(userRepository.containsUserName(username)) {
+            ctx.writeAndFlush("Ошибка: пользователь с таким уже есть в системе!");
+            return;
+        }
+
+        userRepository.saveUser(ctx.channel(), username);
+        ctx.writeAndFlush("Пользователь " + username + " вошел в систему!\n");
     }
 }
