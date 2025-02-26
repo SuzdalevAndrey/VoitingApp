@@ -13,10 +13,10 @@ public class LoginCommand implements Command {
             ctx.writeAndFlush("Ошибка: неверная команда. Пример: login -u=user\n");
             return;
         }
-        String username = command.split("=")[0];
+        String username = command.split("=")[1];
 
         if(userRepository.containsUserName(username)) {
-            ctx.writeAndFlush("Ошибка: пользователь с таким уже есть в системе!");
+            ctx.writeAndFlush("Ошибка: пользователь " + username + " уже есть в системе!");
             return;
         }
 
