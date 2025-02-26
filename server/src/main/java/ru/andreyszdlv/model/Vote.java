@@ -4,16 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Topic {
+public class Vote {
 
     @EqualsAndHashCode.Include
     private final String name;
 
-    private final Set<Vote> votes = ConcurrentHashMap.newKeySet();
+    private final String description;
+
+    private final String userName;
+
+    private final List<AnswerOption> answerOptions;
 }
