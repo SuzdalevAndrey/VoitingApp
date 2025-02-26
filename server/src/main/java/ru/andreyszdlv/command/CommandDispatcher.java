@@ -15,10 +15,11 @@ public class CommandDispatcher {
         commands.put("logout", new LogoutCommand());
     }
 
-    public void dispatch(String command, ChannelHandlerContext ctx) {
+    public void dispatch(String fullCommand, ChannelHandlerContext ctx) {
         //todo сделать нормальное разбиение на команды
-        String[] parts = command.split(" ");
-        Command cmd = commands.getOrDefault(parts[0],
+        String[] parts = fullCommand.split(" ");
+        String command = "create".equals(parts[0])?parts[0]+" "+parts[1]:parts[0];
+        Command cmd = commands.getOrDefault(command,
                 (c, p) -> ctx.writeAndFlush("Неизвестная команда: " + parts[0] + "\n"));
         cmd.execute(ctx, command);
     }
