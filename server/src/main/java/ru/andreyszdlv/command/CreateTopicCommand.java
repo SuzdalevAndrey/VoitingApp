@@ -16,7 +16,15 @@ public class CreateTopicCommand implements Command {
             return;
         }
 
-        String topicName = parts[2].split("=")[1];
+        String[] params = parts[2].split("=");
+
+        if(params.length != 2) {
+            ctx.writeAndFlush("Ошибка: неверное имя. " +
+                    "Не может быть пустым и не может содержать '='");
+            return;
+        }
+
+        String topicName = params[1];
 
         if(topicRepository.containsTopicByName(topicName)) {
             ctx.writeAndFlush("Ошибка: топик с именем " + topicName + " уже существует!");
