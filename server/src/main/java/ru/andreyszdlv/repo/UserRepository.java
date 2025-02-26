@@ -20,4 +20,8 @@ public class UserRepository {
     public String removeUser(Channel channel) {
         return users.remove(channel);
     }
+
+    public boolean containsChannel(Channel channel) {
+        return users.containsKey(channel);
+    }
 }

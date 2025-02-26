@@ -9,11 +9,18 @@ public class LoginCommand implements Command {
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] parts) {
-        if (parts.length < 2 || !parts[1].startsWith("-u=")) {
-            ctx.writeAndFlush("Ошибка: неверная команда. Пример: login -u=user\n");
+        if (parts.length != 2 || !parts[1].startsWith("-u=")) {
+            ctx.writeAndFlush("Ошибка: неверная команда. Пример: login -u=user");
             return;
         }
-        String username = parts[1].split("=")[1];
+        String[] params = parts[1].split("=");
+
+        if(params.length != 2) {
+            ctx.writeAndFlush("Ошибка: неверное имя. Не может быть пустым и содержать '='");
+            return;
+        }
+
+        String username = params[1];
 
         if(userRepository.containsUserName(username)) {
             ctx.writeAndFlush("Ошибка: пользователь " + username + " уже есть в системе!");
@@ -21,6 +28,6 @@ public class LoginCommand implements Command {
         }
 
         userRepository.saveUser(ctx.channel(), username);
-        ctx.writeAndFlush("Пользователь " + username + " вошел в систему!\n");
+        ctx.writeAndFlush("Пользователь " + username + " вошел в систему!");
     }
 }
