@@ -9,7 +9,7 @@ public class LoginCommand implements Command {
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] parts) {
-        if (!parts[1].startsWith("-u=")) {
+        if (parts.length < 2 || !parts[1].startsWith("-u=")) {
             ctx.writeAndFlush("Ошибка: неверная команда. Пример: login -u=user\n");
             return;
         }
