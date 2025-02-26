@@ -1,4 +1,4 @@
-package ru.andreyszdlv;
+package ru.andreyszdlv.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -12,11 +12,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     protected void channelRead0(ChannelHandlerContext ctx, String command) {
         System.out.println("Получена команда: " + command);
 
-        commandDispatcher.dispatch(command, ctx);
+        commandDispatcher.dispatch(ctx, command);
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        commandDispatcher.dispatch("logout", ctx);
+    public void channelInactive(ChannelHandlerContext ctx) {
+        commandDispatcher.dispatch(ctx, "logout");
     }
 }

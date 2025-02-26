@@ -16,7 +16,8 @@ public class LoginCommand implements Command {
         String[] params = parts[1].split("=");
 
         if(params.length != 2) {
-            ctx.writeAndFlush("Ошибка: неверное имя. Не может быть пустым и содержать '='");
+            ctx.writeAndFlush("Ошибка: неверное имя. " +
+                    "Не может быть пустым и не может содержать '='");
             return;
         }
 

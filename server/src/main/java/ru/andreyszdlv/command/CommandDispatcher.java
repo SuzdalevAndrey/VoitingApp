@@ -17,9 +17,10 @@ public class CommandDispatcher {
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("create topic", new CreateTopicCommand());
+        commands.put("create vote", new CreateVoteCommand());
     }
 
-    public void dispatch(String fullCommand, ChannelHandlerContext ctx) {
+    public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
         String[] parts = fullCommand.split(" ");
         String command = "create".equals(parts[0]) ? parts[0] + " " + parts[1]: parts[0];
         if(!"login".equals(command) && !authenticationValidator.isAuthenticated(ctx.channel())) {
