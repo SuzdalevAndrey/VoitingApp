@@ -1,4 +1,4 @@
-package ru.andreyszdlv;
+package ru.andreyszdlv.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,11 +8,11 @@ import java.util.Properties;
 
 @Getter
 @Setter
-public class Config {
+public class ServerConfiguration {
 
     private int port;
 
-    public Config(String propertiesFileName) {
+    public ServerConfiguration(String propertiesFileName) {
         Properties properties = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesFileName)) {
             if (input == null) {

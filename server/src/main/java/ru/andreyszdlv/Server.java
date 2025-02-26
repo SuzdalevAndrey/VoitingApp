@@ -5,11 +5,9 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-
-import java.nio.charset.StandardCharsets;
+import ru.andreyszdlv.config.ServerConfiguration;
 
 public class Server {
 
@@ -20,7 +18,7 @@ public class Server {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new Server(new Config("application.properties").getPort()).run();
+        new Server(new ServerConfiguration("application.properties").getPort()).run();
     }
 
     public void run() throws InterruptedException {
@@ -46,9 +44,8 @@ public class Server {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) {
                         socketChannel.pipeline().addLast(
-                                new LineBasedFrameDecoder(1024),
-                                new StringDecoder(StandardCharsets.UTF_8),
-                                new StringEncoder(StandardCharsets.UTF_8),
+                                new StringDecoder(),
+                                new StringEncoder(),
                                 new ServerHandler()
                         );
                     }
