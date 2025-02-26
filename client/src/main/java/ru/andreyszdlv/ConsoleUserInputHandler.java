@@ -10,8 +10,8 @@ public class ConsoleUserInputHandler implements UserInputHandler {
         try(Scanner scanner = new Scanner(System.in)) {
             while (true) {
                 String command = scanner.nextLine();
-                if ("exit".equalsIgnoreCase(command)) break;
-                future.channel().writeAndFlush(command + "\n");
+                if ("exit".equals(command)) break;
+                future.channel().writeAndFlush(command);
             }
         }
     }
