@@ -1,11 +1,6 @@
-package ru.andreyszdlv.service;
+package ru.andreyszdlv.service.commands;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.andreyszdlv.handler.CommandHandler;
-import ru.andreyszdlv.service.commands.CreateTopicCommand;
-import ru.andreyszdlv.service.commands.CreateVoteCommand;
-import ru.andreyszdlv.service.commands.LoginCommand;
-import ru.andreyszdlv.service.commands.LogoutCommand;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.HashMap;
@@ -13,7 +8,7 @@ import java.util.Map;
 
 public class CommandService {
 
-    private final Map<String, Command> commands = new HashMap<>();
+    private final Map<String, CommandStrategy> commands = new HashMap<>();
 
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
@@ -32,7 +27,7 @@ public class CommandService {
             ctx.writeAndFlush("Ошибка: перед выполнением действий надо войти в систему. Пример: login -u=user");
             return;
         }
-        Command cmd = commands.getOrDefault(command,
+        CommandStrategy cmd = commands.getOrDefault(command,
                 (c, p) -> ctx.writeAndFlush("Неизвестная команда: " + parts[0]));
         cmd.execute(ctx, parts);
     }

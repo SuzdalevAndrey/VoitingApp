@@ -3,9 +3,8 @@ package ru.andreyszdlv.service.commands;
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.service.Command;
 
-public class CreateTopicCommand implements Command {
+public class CreateTopicCommand implements CommandStrategy {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

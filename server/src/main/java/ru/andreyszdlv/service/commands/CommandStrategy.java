@@ -1,7 +1,7 @@
-package ru.andreyszdlv.service;
+package ru.andreyszdlv.service.commands;
 
 import io.netty.channel.ChannelHandlerContext;
 
-public interface Command {
+public interface CommandStrategy {
     void execute(ChannelHandlerContext ctx, String[] parts);
 }
