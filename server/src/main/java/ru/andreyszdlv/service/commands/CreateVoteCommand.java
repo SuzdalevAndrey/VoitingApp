@@ -1,18 +1,13 @@
 package ru.andreyszdlv.service.commands;
 
 import io.netty.channel.ChannelHandlerContext;
-import lombok.AllArgsConstructor;
-import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.service.Command;
 
-@AllArgsConstructor
 public class CreateVoteCommand implements Command {
 
     private final TopicRepository topicRepository = new TopicRepository();
-
-    private final CommandHandler commandHandler;
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] parts) {
@@ -36,10 +31,11 @@ public class CreateVoteCommand implements Command {
             return;
         }
 
+        ctx.pipeline().remove(ctx.handler());
+
         ctx.pipeline().addLast(new VoteDescriptionHandler(topicName));
 
         ctx.writeAndFlush("Введите уникальное название для голосования");
 
-        ctx.pipeline().remove(commandHandler);
     }
 }

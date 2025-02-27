@@ -24,7 +24,6 @@ public class VoteDescriptionHandler extends SimpleChannelInboundHandler<String> 
     public VoteDescriptionHandler(String nameTopic) {
         this.nameTopic = nameTopic;
     }
-    //todo доделать
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String message) {
@@ -34,28 +33,28 @@ public class VoteDescriptionHandler extends SimpleChannelInboundHandler<String> 
                 nameVote = message;
                 step = 2;
 
-                ctx.writeAndFlush("Введите тему голосования:\n");
+                ctx.writeAndFlush("Введите тему голосования:");
                 break;
             case 2:
                 description = message;
                 step = 3;
 
-                ctx.writeAndFlush("Введите количество вариантов ответа:\n");
+                ctx.writeAndFlush("Введите количество вариантов ответа:");
                 break;
 
             case 3:
                 try {
                     numberOfOptions = Integer.parseInt(message);
                     if (numberOfOptions <= 0) {
-                        ctx.writeAndFlush("Количество вариантов должно быть положительным числом.\n");
+                        ctx.writeAndFlush("Количество вариантов должно быть положительным числом.");
                         return;
                     }
 
                     step = 4;
-                    ctx.writeAndFlush("Введите вариант ответа #1:\n");
+                    ctx.writeAndFlush("Введите вариант ответа #1:");
 
                 } catch (NumberFormatException e) {
-                    ctx.writeAndFlush("Пожалуйста, введите правильное число вариантов.\n");
+                    ctx.writeAndFlush("Пожалуйста, введите правильное число вариантов.");
                 }
                 break;
 
@@ -63,7 +62,7 @@ public class VoteDescriptionHandler extends SimpleChannelInboundHandler<String> 
                 options.add(new AnswerOption(message));
 
                 if (options.size() < numberOfOptions) {
-                    ctx.writeAndFlush("Введите вариант ответа #" + (options.size() + 1) + ":\n");
+                    ctx.writeAndFlush("Введите вариант ответа #" + (options.size() + 1) + ":");
                 } else {
                     Vote vote = new Vote(
                             nameVote,
@@ -73,7 +72,7 @@ public class VoteDescriptionHandler extends SimpleChannelInboundHandler<String> 
                     );
                     topicRepository.addVote(nameTopic, vote);
 
-                    ctx.writeAndFlush("Голосование \"" + vote.getName() + "\" успешно создано в топике \"" + nameTopic + "\".\n");
+                    ctx.writeAndFlush("Голосование \"" + vote.getName() + "\" успешно создано в топике \"" + nameTopic + "\".");
 
                     ctx.pipeline().remove(this);
 
@@ -82,7 +81,7 @@ public class VoteDescriptionHandler extends SimpleChannelInboundHandler<String> 
                 break;
 
             default:
-                ctx.writeAndFlush("Ошибка: неизвестный шаг.\n");
+                ctx.writeAndFlush("Ошибка: неизвестный шаг.");
                 break;
         }
     }

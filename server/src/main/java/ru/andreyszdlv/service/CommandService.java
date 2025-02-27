@@ -17,12 +17,12 @@ public class CommandService {
 
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
-    public CommandService(CommandHandler commandHandler) {
+    public CommandService() {
         //todo файл конфигурации
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("create topic", new CreateTopicCommand());
-        commands.put("create vote", new CreateVoteCommand(commandHandler));
+        commands.put("create vote", new CreateVoteCommand());
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {

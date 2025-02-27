@@ -6,7 +6,7 @@ import ru.andreyszdlv.service.CommandService;
 
 public class CommandHandler extends SimpleChannelInboundHandler<String> {
 
-    private final CommandService commandService = new CommandService(this);
+    private final CommandService commandService = new CommandService();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String command) {
