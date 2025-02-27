@@ -1,8 +1,9 @@
-package ru.andreyszdlv.command;
+package ru.andreyszdlv.service.commands;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.service.Command;
 
 public class CreateTopicCommand implements Command {
 

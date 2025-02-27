@@ -1,19 +1,23 @@
-package ru.andreyszdlv.command;
+package ru.andreyszdlv.service;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.handler.CommandHandler;
+import ru.andreyszdlv.service.commands.CreateTopicCommand;
+import ru.andreyszdlv.service.commands.CreateVoteCommand;
+import ru.andreyszdlv.service.commands.LoginCommand;
+import ru.andreyszdlv.service.commands.LogoutCommand;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandDispatcher {
+public class CommandService {
 
     private final Map<String, Command> commands = new HashMap<>();
 
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
-    public CommandDispatcher(CommandHandler commandHandler) {
+    public CommandService(CommandHandler commandHandler) {
         //todo файл конфигурации
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());

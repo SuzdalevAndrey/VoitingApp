@@ -1,7 +1,8 @@
-package ru.andreyszdlv.command;
+package ru.andreyszdlv.service.commands;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.repo.UserRepository;
+import ru.andreyszdlv.service.Command;
 
 public class LogoutCommand implements Command {
 

@@ -1,10 +1,11 @@
-package ru.andreyszdlv.command;
+package ru.andreyszdlv.service.commands;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AllArgsConstructor;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.service.Command;
 
 @AllArgsConstructor
 public class CreateVoteCommand implements Command {

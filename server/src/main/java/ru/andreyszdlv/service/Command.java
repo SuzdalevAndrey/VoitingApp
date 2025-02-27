@@ -1,4 +1,4 @@
-package ru.andreyszdlv.command;
+package ru.andreyszdlv.service;
 
 import io.netty.channel.ChannelHandlerContext;
 
