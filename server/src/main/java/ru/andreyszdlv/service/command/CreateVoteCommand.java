@@ -35,6 +35,5 @@ public class CreateVoteCommand implements CommandStrategy {
         ctx.pipeline().addLast(new VoteDescriptionHandler(topicName));
 
         ctx.writeAndFlush("Введите уникальное название для голосования");
-
     }
 }

@@ -2,87 +2,18 @@ package ru.andreyszdlv.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import ru.andreyszdlv.model.AnswerOption;
-import ru.andreyszdlv.model.Vote;
-import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.repo.UserRepository;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.andreyszdlv.service.vote.VoteCreationService;
 
 public class VoteDescriptionHandler extends SimpleChannelInboundHandler<String> {
 
-    private final String nameTopic;
-    private String nameVote;
-    private String description;
-    private int numberOfOptions;
-    private final List<AnswerOption> options = new ArrayList<>();
-    private int step = 1;
-    private final TopicRepository topicRepository = new TopicRepository();
-    private final UserRepository userRepository = new UserRepository();
+    private final VoteCreationService voteCreationService;
 
-    public VoteDescriptionHandler(String nameTopic) {
-        this.nameTopic = nameTopic;
+    public VoteDescriptionHandler(String topicName) {
+        voteCreationService = new VoteCreationService(topicName);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String message) {
-
-        switch (step) {
-            case 1:
-                nameVote = message;
-                step = 2;
-
-                ctx.writeAndFlush("Введите тему голосования:");
-                break;
-            case 2:
-                description = message;
-                step = 3;
-
-                ctx.writeAndFlush("Введите количество вариантов ответа:");
-                break;
-
-            case 3:
-                try {
-                    numberOfOptions = Integer.parseInt(message);
-                    if (numberOfOptions <= 0) {
-                        ctx.writeAndFlush("Количество вариантов должно быть положительным числом.");
-                        return;
-                    }
-
-                    step = 4;
-                    ctx.writeAndFlush("Введите вариант ответа #1:");
-
-                } catch (NumberFormatException e) {
-                    ctx.writeAndFlush("Пожалуйста, введите правильное число вариантов.");
-                }
-                break;
-
-            case 4:
-                options.add(new AnswerOption(message));
-
-                if (options.size() < numberOfOptions) {
-                    ctx.writeAndFlush("Введите вариант ответа #" + (options.size() + 1) + ":");
-                } else {
-                    Vote vote = new Vote(
-                            nameVote,
-                            description,
-                            userRepository.getUsername(ctx.channel()),
-                            options
-                    );
-                    topicRepository.addVote(nameTopic, vote);
-
-                    ctx.writeAndFlush("Голосование \"" + vote.getName() + "\" успешно создано в топике \"" + nameTopic + "\".");
-
-                    ctx.pipeline().remove(this);
-
-                    ctx.pipeline().addLast(new CommandHandler());
-                }
-                break;
-
-            default:
-                ctx.writeAndFlush("Ошибка: неизвестный шаг.");
-                break;
-        }
+        voteCreationService.processInput(ctx, message);
     }
 }

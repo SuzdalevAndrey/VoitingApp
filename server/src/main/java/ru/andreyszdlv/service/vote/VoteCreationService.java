@@ -1,4 +1,4 @@
-package ru.andreyszdlv.service;
+package ru.andreyszdlv.service.vote;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
@@ -8,7 +8,6 @@ import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
-import ru.andreyszdlv.service.vote.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +36,10 @@ public class VoteCreationService {
     public VoteCreationService(String topicName) {
         this.topicName = topicName;
         stepHandlers = List.of(
-                new NameStep(),
-                new DescriptionStep(),
-                new OptionsCountStep(),
-                new OptionsStep()
+                new VoteNameStep(topicName),
+                new VoteDescriptionStep(),
+                new VoteOptionsCountStep(),
+                new VoteOptionsStep()
         );
     }
 
