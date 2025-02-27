@@ -1,4 +1,4 @@
-package ru.andreyszdlv.service.commands;
+package ru.andreyszdlv.service.command;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.validator.AuthenticationValidator;

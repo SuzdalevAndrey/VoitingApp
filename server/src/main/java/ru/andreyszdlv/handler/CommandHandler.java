@@ -2,7 +2,7 @@ package ru.andreyszdlv.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import ru.andreyszdlv.service.commands.CommandService;
+import ru.andreyszdlv.service.command.CommandService;
 
 public class CommandHandler extends SimpleChannelInboundHandler<String> {
 
