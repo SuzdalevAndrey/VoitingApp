@@ -25,4 +25,8 @@ public class TopicRepository {
     public boolean containsVote(String topicName, Vote vote) {
         return topics.stream().filter(t->t.getName().equals(topicName)).findFirst().get().getVotes().contains(vote);
     }
+
+    public Set<Topic> getAllTopics() {
+        return topics;
+    }
 }

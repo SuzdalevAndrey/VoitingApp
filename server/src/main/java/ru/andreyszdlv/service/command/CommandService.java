@@ -18,6 +18,7 @@ public class CommandService {
         commands.put("logout", new LogoutCommand());
         commands.put("create topic", new CreateTopicCommand());
         commands.put("create vote", new CreateVoteCommand());
+        commands.put("view", new ViewCommand());
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
