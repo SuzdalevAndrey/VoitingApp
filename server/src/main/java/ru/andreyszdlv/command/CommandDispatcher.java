@@ -1,6 +1,7 @@
 package ru.andreyszdlv.command;
 
 import io.netty.channel.ChannelHandlerContext;
+import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.HashMap;
@@ -12,12 +13,12 @@ public class CommandDispatcher {
 
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
-    public CommandDispatcher() {
+    public CommandDispatcher(CommandHandler commandHandler) {
         //todo файл конфигурации
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("create topic", new CreateTopicCommand());
-        commands.put("create vote", new CreateVoteCommand());
+        commands.put("create vote", new CreateVoteCommand(commandHandler));
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {

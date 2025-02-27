@@ -8,7 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import ru.andreyszdlv.config.ServerConfiguration;
-import ru.andreyszdlv.handler.ServerHandler;
+import ru.andreyszdlv.handler.CommandHandler;
 
 public class Server {
 
@@ -47,7 +47,7 @@ public class Server {
                         socketChannel.pipeline().addLast(
                                 new StringDecoder(),
                                 new StringEncoder(),
-                                new ServerHandler()
+                                new CommandHandler()
                         );
                     }
                 });

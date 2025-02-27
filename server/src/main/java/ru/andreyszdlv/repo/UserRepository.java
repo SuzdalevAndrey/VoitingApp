@@ -24,4 +24,8 @@ public class UserRepository {
     public boolean containsChannel(Channel channel) {
         return users.containsKey(channel);
     }
+
+    public String getUsername(Channel channel) {
+        return users.get(channel);
+    }
 }

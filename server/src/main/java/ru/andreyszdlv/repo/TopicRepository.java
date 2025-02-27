@@ -1,6 +1,7 @@
 package ru.andreyszdlv.repo;
 
 import ru.andreyszdlv.model.Topic;
+import ru.andreyszdlv.model.Vote;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,5 +16,9 @@ public class TopicRepository {
 
     public boolean containsTopicByName(String topicName) {
         return topics.contains(new Topic(topicName));
+    }
+
+    public void addVote(String topicName, Vote vote) {
+        topics.stream().filter(t->t.getName().equals(topicName)).findFirst().ifPresent(t->t.getVotes().add(vote));
     }
 }

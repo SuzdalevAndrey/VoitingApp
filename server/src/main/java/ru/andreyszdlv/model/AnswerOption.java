@@ -1,14 +1,14 @@
 package ru.andreyszdlv.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AnswerOption {
     private final String answer;
 
-    private long count;
+    private long count = 0;
 }
