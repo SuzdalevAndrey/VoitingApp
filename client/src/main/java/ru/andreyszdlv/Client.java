@@ -33,7 +33,7 @@ public class Client {
             Bootstrap bootstrap = createBootstrap(group);
             ChannelFuture future = connect(bootstrap, host, port).sync();
 
-            userInputHandler.handle(future);
+            userInputHandler.handle(future, group);
 
             future.channel().closeFuture().sync();
         } finally {
