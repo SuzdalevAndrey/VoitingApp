@@ -9,19 +9,22 @@ public class ViewCommand implements CommandStrategy{
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
-
-        if(paramsCommand.length == 0){
-            handleNoParams(ctx, paramsCommand);
-        } else if (paramsCommand.length == 1) {
-            handleParamT(ctx, paramsCommand);
-        } else if (paramsCommand.length == 2) {
-            handleParamTAndV(ctx, paramsCommand);
-        } else {
-            ctx.writeAndFlush("Ошибка: неверная команда.");
+        switch(paramsCommand.length){
+            case 0:
+                handleNoParams(ctx);
+                break;
+            case 1:
+                handleSingleParam(ctx, paramsCommand);
+                break;
+            case 2:
+                handleTwoParams(ctx, paramsCommand);
+                break;
+            default:
+                ctx.writeAndFlush("Ошибка: неверная команда.");
         }
     }
 
-    private void handleNoParams(ChannelHandlerContext ctx, String[] paramsCommand){
+    private void handleNoParams(ChannelHandlerContext ctx){
         topicRepository.getAllTopics().forEach(
                 (name, topic)->ctx.write(
                         String.format(
@@ -35,21 +38,14 @@ public class ViewCommand implements CommandStrategy{
         ctx.flush();
     }
 
-    private void handleParamT(ChannelHandlerContext ctx, String[] paramsCommand){
+    private void handleSingleParam(ChannelHandlerContext ctx, String[] paramsCommand){
 
-        if(paramsCommand.length != 1 || !paramsCommand[0].startsWith("-t=")){
+        String topicName = extractValue(paramsCommand[0], "-t=");
+
+        if(topicName == null){
             ctx.writeAndFlush("Ошибка: неверная команда. Пример: view -t=NameTopic");
-        }
-
-        String[] paramAndValue = paramsCommand[0].split("=");
-
-        if(paramAndValue.length != 2) {
-            ctx.writeAndFlush("Ошибка: неверное имя. " +
-                    "Не может быть пустым и не может содержать '='");
             return;
         }
-
-        String topicName = paramAndValue[1];
 
         topicRepository.getTopicByName(topicName)
                 .ifPresentOrElse(
@@ -60,25 +56,15 @@ public class ViewCommand implements CommandStrategy{
                 );
     }
 
-    private void handleParamTAndV(ChannelHandlerContext ctx, String[] paramsCommand){
+    private void handleTwoParams(ChannelHandlerContext ctx, String[] paramsCommand){
 
-        if(paramsCommand.length != 2
-                || !paramsCommand[0].startsWith("-t=")
-                || !paramsCommand[1].startsWith("-v=")) {
+        String topicName = extractValue(paramsCommand[0], "-t=");
+        String voteName = extractValue(paramsCommand[1], "-v=");
+
+        if(topicName == null && voteName == null){
             ctx.writeAndFlush("Ошибка: неверная команда. Пример: view -t=NameTopic -v=NameVote");
-        }
-
-        String[] paramAndValueForT = paramsCommand[0].split("=");
-        String[] paramAndValueForV = paramsCommand[1].split("=");
-
-        if(paramAndValueForT.length != 2 || paramAndValueForV.length != 2) {
-            ctx.writeAndFlush("Ошибка: неверное имя. " +
-                    "Не может быть пустым и не может содержать '='");
             return;
         }
-
-        String topicName = paramAndValueForT[1];
-        String voteName = paramAndValueForV[1];
 
         topicRepository.getTopicByName(topicName)
                 .ifPresentOrElse(
@@ -93,5 +79,12 @@ public class ViewCommand implements CommandStrategy{
                                 "Топик с названием \"%s\" не найден", topicName)
                         )
                 );
+    }
+
+    private String extractValue(String param, String prefix) {
+        if (param.startsWith(prefix)) {
+            return param.substring(prefix.length());
+        }
+        return null;
     }
 }
