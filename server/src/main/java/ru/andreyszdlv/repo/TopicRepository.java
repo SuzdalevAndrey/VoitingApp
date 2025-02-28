@@ -27,9 +27,9 @@ public class TopicRepository {
         topic.getVotes().put(vote.getName(), vote);
     }
 
-    public boolean containsVote(String topicName, Vote vote) {
+    public boolean containsVoteByName(String topicName, String voteName) {
         Topic topic = topics.get(topicName);
-        return topic != null && topic.getVotes().containsKey(vote.getName());
+        return topic != null && topic.getVotes().containsKey(voteName);
     }
 
     public Map<String, Topic> getAllTopics() {
