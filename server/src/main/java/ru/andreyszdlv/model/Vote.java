@@ -13,7 +13,7 @@ public class Vote {
 
     private final String description;
 
-    private final String userName;
+    private final String authorName;
 
     private final List<AnswerOption> answerOptions;
 

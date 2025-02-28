@@ -38,10 +38,7 @@ public class VoteCommand implements CommandStrategy{
         Optional<Vote> vote = topic.get().getVoteByName(voteName);
 
         if(vote.isEmpty()) {
-            ctx.writeAndFlush(String.format(
-                    "Голосование с названием \"%s\" не найдено",
-                    voteName)
-            );
+            ctx.writeAndFlush(String.format("Голосование с названием \"%s\" не найдено", voteName));
             return;
         }
 

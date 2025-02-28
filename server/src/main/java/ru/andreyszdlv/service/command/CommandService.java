@@ -21,6 +21,7 @@ public class CommandService {
         commands.put("create vote", new CreateVoteCommand());
         commands.put("view", new ViewCommand());
         commands.put("vote", new VoteCommand());
+        commands.put("delete", new DeleteCommand());
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {

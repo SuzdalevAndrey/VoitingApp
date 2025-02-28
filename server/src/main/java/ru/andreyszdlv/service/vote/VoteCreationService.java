@@ -69,7 +69,7 @@ public class VoteCreationService {
                 Vote.builder()
                         .name(voteName)
                         .description(description)
-                        .userName(userRepository.getUsername(ctx.channel().id().asLongText()))
+                        .authorName(userRepository.getUsername(ctx.channel().id().asLongText()))
                         .answerOptions(options)
                         .build()
         );

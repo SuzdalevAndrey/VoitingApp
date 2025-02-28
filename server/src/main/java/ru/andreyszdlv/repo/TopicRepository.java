@@ -39,4 +39,8 @@ public class TopicRepository {
     public Optional<Topic> getTopicByName(String topicName) {
         return Optional.ofNullable(topics.get(topicName));
     }
+
+    public void removeVote(String topicName, String voteName) {
+        getTopicByName(topicName).ifPresent(topic -> topic.getVotes().remove(voteName));
+    }
 }
