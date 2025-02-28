@@ -4,5 +4,5 @@ import io.netty.channel.ChannelHandlerContext;
 
 @FunctionalInterface
 public interface CommandStrategy {
-    void execute(ChannelHandlerContext ctx, String[] parts);
+    void execute(ChannelHandlerContext ctx, String[] paramsCommand);
 }

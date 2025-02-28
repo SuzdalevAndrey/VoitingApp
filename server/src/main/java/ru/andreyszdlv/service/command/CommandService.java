@@ -5,6 +5,7 @@ import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class CommandService {
 
@@ -22,14 +23,27 @@ public class CommandService {
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
-        String[] parts = fullCommand.split(" ");
-        String command = "create".equals(parts[0]) ? parts[0] + " " + parts[1]: parts[0];
-        if(!"login".equals(command) && !authenticationValidator.isAuthenticated(ctx.channel())) {
-            ctx.writeAndFlush("Ошибка: перед выполнением действий надо войти в систему. Пример: login -u=user");
+        String trimmedCommand = fullCommand.trim();
+
+        Optional<String> matchedCommand = commands.keySet().stream()
+                .filter(trimmedCommand::startsWith)
+                .findFirst();
+
+        if(matchedCommand.isEmpty()) {
+            ctx.writeAndFlush("Неизвестная команда: " + trimmedCommand);
             return;
         }
-        CommandStrategy cmd = commands.getOrDefault(command,
-                (c, p) -> ctx.writeAndFlush("Неизвестная команда: " + parts[0]));
-        cmd.execute(ctx, parts);
+
+        String command = matchedCommand.get();
+        String paramsPart = trimmedCommand.substring(command.length()).trim();
+        String[] params = paramsPart.isEmpty() ? new String[0] : paramsPart.split("\\s+");
+
+        if(!"login".equals(command) && !authenticationValidator.isAuthenticated(ctx.channel())) {
+            ctx.writeAndFlush("Ошибка: перед выполнением действий надо войти в систему." +
+                    "Пример: login -u=user");
+            return;
+        }
+
+        commands.get(matchedCommand.get()).execute(ctx, params);
     }
 }
