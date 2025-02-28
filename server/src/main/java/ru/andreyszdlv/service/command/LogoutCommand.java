@@ -9,6 +9,6 @@ public class LogoutCommand implements CommandStrategy {
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
-        System.out.println(userRepository.removeUser(ctx.channel()));
+        System.out.println(userRepository.removeUser(ctx.channel().id().asLongText()));
     }
 }

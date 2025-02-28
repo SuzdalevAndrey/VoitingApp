@@ -25,12 +25,12 @@ public class LoginCommand implements CommandStrategy {
 
         String username = paramAndValue[1];
 
-        if(userRepository.containsUserName(username)) {
+        if(userRepository.containsUserByName(username)) {
             ctx.writeAndFlush("Ошибка: пользователь " + username + " уже есть в системе!");
             return;
         }
 
-        userRepository.saveUser(ctx.channel(), username);
+        userRepository.saveUser(ctx.channel().id().asLongText(), username);
         ctx.writeAndFlush("Пользователь " + username + " вошел в систему!");
     }
 }
