@@ -20,6 +20,7 @@ public class CommandService {
         commands.put("create topic", new CreateTopicCommand());
         commands.put("create vote", new CreateVoteCommand());
         commands.put("view", new ViewCommand());
+        commands.put("vote", new VoteCommand());
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {

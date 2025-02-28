@@ -2,7 +2,6 @@ package ru.andreyszdlv.service.vote;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AllArgsConstructor;
-import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
 
 @AllArgsConstructor
@@ -14,7 +13,8 @@ public class VoteNameStep implements VoteStepStrategy {
 
     @Override
     public void execute(ChannelHandlerContext ctx, String message, VoteCreationService service) {
-        if(topicRepository.containsVote(topicName, Vote.builder().name(message).build())){
+        message = message.trim();
+        if(topicRepository.containsVoteByName(topicName, message)){
             ctx.writeAndFlush("Ошибка: такое название уже содержится в топике." +
                     " Введите уникальное название:");
             return;
