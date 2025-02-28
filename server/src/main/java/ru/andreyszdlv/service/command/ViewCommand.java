@@ -23,11 +23,11 @@ public class ViewCommand implements CommandStrategy{
 
     private void handleNoParams(ChannelHandlerContext ctx, String[] paramsCommand){
         topicRepository.getAllTopics().forEach(
-                topic->ctx.write(
+                (name, topic)->ctx.write(
                         String.format(
                                 "%s (votes in topic=%s)\n",
-                                topic.getName(),
-                                topic.getVotes().size()
+                                name,
+                                topic.countVotes()
                         )
                 )
         );
@@ -51,19 +51,13 @@ public class ViewCommand implements CommandStrategy{
 
         String topicName = paramAndValue[1];
 
-        topicRepository.getAllTopics().stream()
-                .filter(topic->topic.getName().equals(topicName))
-                .findFirst()
-                .ifPresent(topic -> {
-                    ctx.write(topic.getName() + "{\n");
-                    topic.getVotes()
-                            .forEach(vote ->
-                                    ctx.write("Название: " + vote.getName() + "\n")
-                            );
-                    ctx.write("}");
-                });
-
-        ctx.flush();
+        topicRepository.getTopicByName(topicName)
+                .ifPresentOrElse(
+                        topic -> ctx.writeAndFlush(topic.toString()),
+                        () -> ctx.writeAndFlush(String.format(
+                                "Топик с названием \"%s\" не найден", topicName)
+                        )
+                );
     }
 
     private void handleParamTAndV(ChannelHandlerContext ctx, String[] paramsCommand){
@@ -86,15 +80,18 @@ public class ViewCommand implements CommandStrategy{
         String topicName = paramAndValueForT[1];
         String voteName = paramAndValueForV[1];
 
-        topicRepository.getAllTopics().stream()
-                .filter(topic->topic.getName().equals(topicName))
-                .findFirst()
-                .ifPresent(topic ->
-                    topic.getVotes()
-                            .stream()
-                            .filter(vote->vote.getName().equals(voteName))
-                            .findFirst()
-                            .ifPresent(vote -> ctx.writeAndFlush(vote.toString()))
+        topicRepository.getTopicByName(topicName)
+                .ifPresentOrElse(
+                        topic -> topic.getVoteByName(voteName)
+                                .ifPresentOrElse(
+                                        vote -> ctx.writeAndFlush(vote.toString()),
+                                        () -> ctx.writeAndFlush(String.format(
+                                                "Голосование с названием \"%s\" не найдено", voteName)
+                                        )
+                                ),
+                        () -> ctx.writeAndFlush(String.format(
+                                "Топик с названием \"%s\" не найден", topicName)
+                        )
                 );
     }
 }

@@ -3,30 +3,40 @@ package ru.andreyszdlv.repo;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 
-import java.util.Set;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TopicRepository {
 
-    private static final Set<Topic> topics = ConcurrentHashMap.newKeySet();
+    private static final Map<String, Topic> topics = new ConcurrentHashMap<>();
 
     public void saveTopic(Topic topic) {
-        topics.add(topic);
+        topics.put(topic.getName(), topic);
     }
 
     public boolean containsTopicByName(String topicName) {
-        return topics.contains(new Topic(topicName));
+        return topics.containsKey(topicName);
     }
 
     public void addVote(String topicName, Vote vote) {
-        topics.stream().filter(t->t.getName().equals(topicName)).findFirst().ifPresent(t->t.getVotes().add(vote));
+        Topic topic = topics.get(topicName);
+        if (topic == null) {
+            throw new IllegalArgumentException("Топик \"" + topicName + "\" не найден");
+        }
+        topic.getVotes().put(vote.getName(), vote);
     }
 
     public boolean containsVote(String topicName, Vote vote) {
-        return topics.stream().filter(t->t.getName().equals(topicName)).findFirst().get().getVotes().contains(vote);
+        Topic topic = topics.get(topicName);
+        return topic != null && topic.getVotes().containsKey(vote.getName());
     }
 
-    public Set<Topic> getAllTopics() {
+    public Map<String, Topic> getAllTopics() {
         return topics;
+    }
+
+    public Optional<Topic> getTopicByName(String topicName) {
+        return Optional.ofNullable(topics.get(topicName));
     }
 }

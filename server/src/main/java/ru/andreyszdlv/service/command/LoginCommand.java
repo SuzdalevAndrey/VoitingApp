@@ -3,8 +3,6 @@ package ru.andreyszdlv.service.command;
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.repo.UserRepository;
 
-import java.util.Arrays;
-
 public class LoginCommand implements CommandStrategy {
 
     private final UserRepository userRepository = new UserRepository();
