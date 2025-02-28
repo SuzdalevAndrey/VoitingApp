@@ -19,4 +19,9 @@ public class Vote {
     private final String userName;
 
     private final List<AnswerOption> answerOptions;
+
+    @Override
+    public String toString(){
+        return "\tНазвание: " + name + ". Тема: " + description;
+    }
 }
