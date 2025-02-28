@@ -17,15 +17,15 @@ public class LoginCommand implements CommandStrategy {
             return;
         }
 
-        String[] paramsAndValue = paramsCommand[0].split("=");
+        String[] paramAndValue = paramsCommand[0].split("=");
 
-        if(paramsAndValue.length != 2) {
+        if(paramAndValue.length != 2) {
             ctx.writeAndFlush("Ошибка: неверное имя. " +
                     "Не может быть пустым и не может содержать '='");
             return;
         }
 
-        String username = paramsAndValue[1];
+        String username = paramAndValue[1];
 
         if(userRepository.containsUserName(username)) {
             ctx.writeAndFlush("Ошибка: пользователь " + username + " уже есть в системе!");
