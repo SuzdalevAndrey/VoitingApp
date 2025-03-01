@@ -3,7 +3,7 @@ package ru.andreyszdlv.enums;
 import lombok.Getter;
 
 @Getter
-public enum ServerCommand {
+public enum ServerCommandType {
 
     LOAD("load"),
     SAVE("save"),
@@ -11,7 +11,7 @@ public enum ServerCommand {
 
     private final String name;
 
-    ServerCommand(String name){
+    ServerCommandType(String name){
         this.name = name;
     }
 }

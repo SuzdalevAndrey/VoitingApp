@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
 
-public class CreateVoteUserCommand implements UserCommand {
+public class CreateVoteUserCommand implements UserCommandHandler {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

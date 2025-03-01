@@ -9,7 +9,7 @@ import ru.andreyszdlv.util.ParameterUtils;
 
 import java.util.Optional;
 
-public class DeleteUserCommand implements UserCommand {
+public class DeleteUserCommand implements UserCommandHandler {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

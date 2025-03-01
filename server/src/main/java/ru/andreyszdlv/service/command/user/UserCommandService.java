@@ -1,6 +1,7 @@
 package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
+import ru.andreyszdlv.enums.UserCommandType;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.Arrays;
@@ -9,24 +10,24 @@ import java.util.Map;
 
 public class UserCommandService {
 
-    private final Map<ru.andreyszdlv.enums.UserCommand, UserCommand> commands = new HashMap<>();
+    private final Map<UserCommandType, UserCommandHandler> commands = new HashMap<>();
 
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
     public UserCommandService() {
-        commands.put(ru.andreyszdlv.enums.UserCommand.LOGIN, new LoginUserCommand());
-        commands.put(ru.andreyszdlv.enums.UserCommand.LOGOUT, new LogoutUserCommand());
-        commands.put(ru.andreyszdlv.enums.UserCommand.CREATE_TOPIC, new CreateTopicUserCommand());
-        commands.put(ru.andreyszdlv.enums.UserCommand.CREATE_VOTE, new CreateVoteUserCommand());
-        commands.put(ru.andreyszdlv.enums.UserCommand.VIEW, new ViewUserCommand());
-        commands.put(ru.andreyszdlv.enums.UserCommand.VOTE, new VoteUserCommand());
-        commands.put(ru.andreyszdlv.enums.UserCommand.DELETE, new DeleteUserCommand());
+        commands.put(UserCommandType.LOGIN, new LoginUserCommand());
+        commands.put(UserCommandType.LOGOUT, new LogoutUserCommand());
+        commands.put(UserCommandType.CREATE_TOPIC, new CreateTopicUserCommand());
+        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand());
+        commands.put(UserCommandType.VIEW, new ViewUserCommand());
+        commands.put(UserCommandType.VOTE, new VoteUserCommand());
+        commands.put(UserCommandType.DELETE, new DeleteUserCommand());
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
         String trimmedCommand = fullCommand.trim();
 
-        ru.andreyszdlv.enums.UserCommand command = Arrays.stream(ru.andreyszdlv.enums.UserCommand.values())
+        UserCommandType command = Arrays.stream(UserCommandType.values())
                 .filter(cmd -> trimmedCommand.startsWith(cmd.getName()))
                 .findFirst()
                 .orElse(null);
@@ -36,7 +37,7 @@ public class UserCommandService {
             return;
         }
 
-        if(!command.equals(ru.andreyszdlv.enums.UserCommand.LOGIN)
+        if(!command.equals(UserCommandType.LOGIN)
                 && !authenticationValidator.isAuthenticated(ctx.channel())) {
             ctx.writeAndFlush("Ошибка: перед выполнением действий надо войти в систему. " +
                     "Пример: login -u=user");
