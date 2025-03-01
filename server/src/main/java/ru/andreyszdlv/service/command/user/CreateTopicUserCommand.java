@@ -1,37 +1,42 @@
 package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.util.ParameterUtils;
 
+@RequiredArgsConstructor
 public class CreateTopicUserCommand implements UserCommandHandler {
 
-    private final TopicRepository topicRepository = new TopicRepository();
+    private final TopicRepository topicRepository;
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
 
-        if(paramsCommand.length != 1 || !paramsCommand[0].startsWith("-n=")) {
+        if(paramsCommand.length != 1) {
             ctx.writeAndFlush("Ошибка: неверная команда. Пример: create topic -n=НазваниеТопика");
             return;
         }
 
-        String[] paramAndValue = paramsCommand[0].split("=");
+        String topicName = ParameterUtils.extractValueByPrefix(paramsCommand[0], "-n=");
 
-        if(paramAndValue.length != 2) {
-            ctx.writeAndFlush("Ошибка: неверное имя. " +
-                    "Не может быть пустым и не может содержать '='");
+        if(topicName == null) {
+            ctx.writeAndFlush("Ошибка: неверная команда. Пример: create topic -n=НазваниеТопика");
             return;
         }
 
-        String topicName = paramAndValue[1];
+        if(topicName.isBlank()){
+            ctx.writeAndFlush("Ошибка: пустое имя!");
+            return;
+        }
 
         if(topicRepository.containsTopicByName(topicName)) {
-            ctx.writeAndFlush("Ошибка: топик с именем " + topicName + " уже существует!");
+            ctx.writeAndFlush(String.format("Ошибка: топик с именем \"%s\" уже существует!", topicName));
             return;
         }
 
         topicRepository.saveTopic(new Topic(topicName));
-        ctx.writeAndFlush("Топик с названием " + topicName + " создан!");
+        ctx.writeAndFlush(String.format("Топик с именем \"%s\" создан!", topicName));
     }
 }

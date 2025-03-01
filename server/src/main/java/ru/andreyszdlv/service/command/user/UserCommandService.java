@@ -2,6 +2,7 @@ package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.enums.UserCommandType;
+import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class UserCommandService {
     public UserCommandService() {
         commands.put(UserCommandType.LOGIN, new LoginUserCommand());
         commands.put(UserCommandType.EXIT, new ExitUserCommand());
-        commands.put(UserCommandType.CREATE_TOPIC, new CreateTopicUserCommand());
+        commands.put(UserCommandType.CREATE_TOPIC, new CreateTopicUserCommand(new TopicRepository()));
         commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand());
         commands.put(UserCommandType.VIEW, new ViewUserCommand());
         commands.put(UserCommandType.VOTE, new VoteUserCommand());
