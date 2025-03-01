@@ -23,7 +23,7 @@ public class UserCommandService {
                 new CreateTopicUserCommand(new TopicRepository()));
         commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand(new TopicRepository()));
         commands.put(UserCommandType.VIEW, new ViewUserCommand(new TopicRepository()));
-        commands.put(UserCommandType.VOTE, new VoteUserCommand());
+        commands.put(UserCommandType.VOTE, new VoteUserCommand(new TopicRepository()));
         commands.put(UserCommandType.DELETE,
                 new DeleteUserCommand(new TopicRepository(), new UserRepository()));
     }
