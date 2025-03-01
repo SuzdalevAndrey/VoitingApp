@@ -1,5 +1,6 @@
 package ru.andreyszdlv.service.file;
 
+import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.model.Topic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,9 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class JsonFileHandler implements FileHandler {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public void save(String filename, Map<String, Topic> topics) throws IOException {

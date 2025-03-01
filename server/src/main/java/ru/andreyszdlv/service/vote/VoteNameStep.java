@@ -1,13 +1,13 @@
 package ru.andreyszdlv.service.vote;
 
 import io.netty.channel.ChannelHandlerContext;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.repo.TopicRepository;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VoteNameStep implements VoteStepStrategy {
 
-    private final TopicRepository topicRepository = new TopicRepository();
+    private final TopicRepository topicRepository;
 
     private final String topicName;
 

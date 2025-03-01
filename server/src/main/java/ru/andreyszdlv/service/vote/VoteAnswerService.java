@@ -10,7 +10,7 @@ import ru.andreyszdlv.service.command.user.UserCommandService;
 @RequiredArgsConstructor
 public class VoteAnswerService {
 
-    private final UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository;
 
     private final Vote vote;
 

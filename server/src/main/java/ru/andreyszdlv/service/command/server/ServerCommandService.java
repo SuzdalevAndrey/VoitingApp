@@ -1,5 +1,6 @@
 package ru.andreyszdlv.service.command.server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.service.file.JsonFileHandler;
@@ -13,8 +14,10 @@ public class ServerCommandService {
     private final Map<ServerCommandType, ServerCommandHandler> commands = new HashMap<>();
 
     public ServerCommandService() {
-        commands.put(ServerCommandType.SAVE, new SaveServerCommand(new JsonFileHandler(), new TopicRepository()));
-        commands.put(ServerCommandType.LOAD, new LoadServerCommand(new JsonFileHandler(), new TopicRepository()));
+        commands.put(ServerCommandType.SAVE,
+                new SaveServerCommand(new JsonFileHandler(new ObjectMapper()), new TopicRepository()));
+        commands.put(ServerCommandType.LOAD,
+                new LoadServerCommand(new JsonFileHandler(new ObjectMapper()), new TopicRepository()));
     }
 
     public void dispatch(String fullCommand) {

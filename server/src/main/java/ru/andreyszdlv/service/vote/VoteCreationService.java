@@ -29,19 +29,23 @@ public class VoteCreationService {
     @Setter(AccessLevel.NONE)
     private int step = 0;
 
-    private final TopicRepository topicRepository = new TopicRepository();
-    private final UserRepository userRepository = new UserRepository();
+    private final TopicRepository topicRepository;
+    private final UserRepository userRepository;
 
     private final List<VoteStepStrategy> stepHandlers;
 
-    public VoteCreationService(String topicName) {
+    public VoteCreationService(String topicName,
+                               TopicRepository topicRepository,
+                               UserRepository userRepository) {
         this.topicName = topicName;
         stepHandlers = List.of(
-                new VoteNameStep(topicName),
+                new VoteNameStep(new TopicRepository(), topicName),
                 new VoteDescriptionStep(),
                 new VoteOptionsCountStep(),
                 new VoteOptionsStep()
         );
+        this.topicRepository = topicRepository;
+        this.userRepository = userRepository;
     }
 
     public void processInput(ChannelHandlerContext ctx, String message){
