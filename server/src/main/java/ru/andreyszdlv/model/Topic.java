@@ -31,8 +31,8 @@ public class Topic {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("Название: \"").append(name).append("\"\nСписок голосований{\n");
-        votes.keySet().forEach(name ->
-                result.append("\tНазвание: \"").append(name).append("\"\n")
+        votes.keySet().forEach(
+                name -> result.append("\tНазвание: \"").append(name).append("\"\n")
         );
         result.append("}");
         return result.toString();

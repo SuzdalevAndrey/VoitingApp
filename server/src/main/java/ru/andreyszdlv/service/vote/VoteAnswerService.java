@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.UserRepository;
+import ru.andreyszdlv.service.command.user.UserCommandService;
 
 @RequiredArgsConstructor
 public class VoteAnswerService {
@@ -41,6 +42,6 @@ public class VoteAnswerService {
         ctx.writeAndFlush(String.format("Вы успешно проголосовали за #%d вариант", count));
 
         ctx.pipeline().removeLast();
-        ctx.pipeline().addLast(new CommandHandler());
+        ctx.pipeline().addLast(new CommandHandler(new UserCommandService()));
     }
 }
