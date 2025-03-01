@@ -10,12 +10,15 @@ import io.netty.handler.codec.string.StringEncoder;
 import ru.andreyszdlv.config.ServerConfiguration;
 import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.handler.CommandHandler;
+import ru.andreyszdlv.service.command.server.ServerCommandService;
 
 import java.util.Scanner;
 
 public class Server {
 
     private final int port;
+
+    private final ServerCommandService serverCommandService = new ServerCommandService();
 
     public Server(int port) {
         this.port = port;
@@ -70,6 +73,7 @@ public class Server {
                         shutdownServer(future, bossGroup, workerGroup);
                         break;
                     }
+                    serverCommandService.dispatch(command);
                 }
             }
         });
