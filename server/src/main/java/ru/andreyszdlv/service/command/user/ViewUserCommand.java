@@ -2,9 +2,8 @@ package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.service.command.CommandStrategy;
 
-public class ViewCommand implements CommandStrategy {
+public class ViewUserCommand implements UserCommandStrategy {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

@@ -2,9 +2,8 @@ package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.repo.UserRepository;
-import ru.andreyszdlv.service.command.CommandStrategy;
 
-public class LogoutCommand implements CommandStrategy {
+public class LogoutUserCommand implements UserCommandStrategy {
 
     private final UserRepository userRepository = new UserRepository();
 

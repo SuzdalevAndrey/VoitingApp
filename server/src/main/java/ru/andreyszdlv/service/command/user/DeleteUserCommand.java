@@ -5,12 +5,11 @@ import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
-import ru.andreyszdlv.service.command.CommandStrategy;
 import ru.andreyszdlv.util.ParameterUtils;
 
 import java.util.Optional;
 
-public class DeleteCommand implements CommandStrategy {
+public class DeleteUserCommand implements UserCommandStrategy {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

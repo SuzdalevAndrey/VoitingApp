@@ -3,9 +3,8 @@ package ru.andreyszdlv.service.command.user;
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.service.command.CommandStrategy;
 
-public class CreateVoteCommand implements CommandStrategy {
+public class CreateVoteUserCommand implements UserCommandStrategy {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

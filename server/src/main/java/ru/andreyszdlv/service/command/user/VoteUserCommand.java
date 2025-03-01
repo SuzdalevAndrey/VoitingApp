@@ -5,12 +5,11 @@ import ru.andreyszdlv.handler.VoteAnswerHandler;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.service.command.CommandStrategy;
 import ru.andreyszdlv.util.ParameterUtils;
 
 import java.util.Optional;
 
-public class VoteCommand implements CommandStrategy {
+public class VoteUserCommand implements UserCommandStrategy {
 
     private final TopicRepository topicRepository = new TopicRepository();
 
