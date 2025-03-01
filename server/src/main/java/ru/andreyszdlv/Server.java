@@ -11,6 +11,7 @@ import ru.andreyszdlv.config.ServerConfiguration;
 import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.service.command.server.ServerCommandService;
+import ru.andreyszdlv.service.command.user.UserCommandService;
 
 import java.util.Scanner;
 
@@ -55,7 +56,7 @@ public class Server {
                         socketChannel.pipeline().addLast(
                                 new StringDecoder(),
                                 new StringEncoder(),
-                                new CommandHandler()
+                                new CommandHandler(new UserCommandService())
                         );
                     }
                 });
