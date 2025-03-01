@@ -9,6 +9,7 @@ import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
 import ru.andreyszdlv.service.command.user.UserCommandService;
+import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,6 @@ public class VoteCreationService {
         );
         ctx.writeAndFlush("Голосование \"" + voteName + "\" успешно создано в топике \"" + topicName + "\".");
         ctx.pipeline().remove(ctx.handler());
-        ctx.pipeline().addLast(new CommandHandler(new UserCommandService()));
+        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(new UserRepository()))));
     }
 }

@@ -14,9 +14,9 @@ public class UserCommandService {
 
     private final Map<UserCommandType, UserCommandHandler> commands = new HashMap<>();
 
-    private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
+    private final AuthenticationValidator authenticationValidator;
 
-    public UserCommandService() {
+    public UserCommandService(AuthenticationValidator authenticationValidator) {
         commands.put(UserCommandType.LOGIN, new LoginUserCommand(new UserRepository()));
         commands.put(UserCommandType.EXIT, new ExitUserCommand(new UserRepository()));
         commands.put(UserCommandType.CREATE_TOPIC,
@@ -26,6 +26,7 @@ public class UserCommandService {
         commands.put(UserCommandType.VOTE, new VoteUserCommand(new TopicRepository()));
         commands.put(UserCommandType.DELETE,
                 new DeleteUserCommand(new TopicRepository(), new UserRepository()));
+        this.authenticationValidator = authenticationValidator;
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
