@@ -11,6 +11,10 @@ public class TopicRepository {
 
     private static final Map<String, Topic> topics = new ConcurrentHashMap<>();
 
+    public void saveTopics(Map<String, Topic> saveTopics) {
+        topics.putAll(saveTopics);
+    }
+
     public void saveTopic(Topic topic) {
         topics.put(topic.getName(), topic);
     }

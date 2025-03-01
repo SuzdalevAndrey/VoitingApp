@@ -1,21 +1,23 @@
 package ru.andreyszdlv.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Builder
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Vote {
 
-    private final String name;
+    private String name;
 
-    private final String description;
+    private String description;
 
-    private final String authorName;
+    private String authorName;
 
-    private final List<AnswerOption> answerOptions;
+    private List<AnswerOption> answerOptions;
 
     @Override
     public String toString(){

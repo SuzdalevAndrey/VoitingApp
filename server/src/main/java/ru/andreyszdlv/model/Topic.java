@@ -2,6 +2,8 @@ package ru.andreyszdlv.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Map;
 import java.util.Optional;
@@ -9,9 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @AllArgsConstructor
+@Setter
+@NoArgsConstructor
 public class Topic {
 
-    private final String name;
+    private String name;
 
     private final Map<String, Vote> votes = new ConcurrentHashMap<>();
 

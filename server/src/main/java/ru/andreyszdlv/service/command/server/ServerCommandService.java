@@ -11,6 +11,7 @@ public class ServerCommandService {
 
     public ServerCommandService() {
         commands.put(ServerCommandType.SAVE, new SaveServerCommand());
+        commands.put(ServerCommandType.LOAD, new LoadServerCommand());
     }
 
     public void dispatch(String fullCommand) {
