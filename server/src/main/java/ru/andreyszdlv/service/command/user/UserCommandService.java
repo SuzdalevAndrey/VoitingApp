@@ -17,7 +17,7 @@ public class UserCommandService {
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
     public UserCommandService() {
-        commands.put(UserCommandType.LOGIN, new LoginUserCommand());
+        commands.put(UserCommandType.LOGIN, new LoginUserCommand(new UserRepository()));
         commands.put(UserCommandType.EXIT, new ExitUserCommand(new UserRepository()));
         commands.put(UserCommandType.CREATE_TOPIC,
                 new CreateTopicUserCommand(new TopicRepository()));
