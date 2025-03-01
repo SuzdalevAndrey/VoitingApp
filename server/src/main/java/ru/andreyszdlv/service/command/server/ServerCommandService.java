@@ -1,6 +1,9 @@
 package ru.andreyszdlv.service.command.server;
 
 import ru.andreyszdlv.enums.ServerCommandType;
+import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.service.file.JsonFileHandler;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +13,8 @@ public class ServerCommandService {
     private final Map<ServerCommandType, ServerCommandHandler> commands = new HashMap<>();
 
     public ServerCommandService() {
-        commands.put(ServerCommandType.SAVE, new SaveServerCommand());
-        commands.put(ServerCommandType.LOAD, new LoadServerCommand());
+        commands.put(ServerCommandType.SAVE, new SaveServerCommand(new JsonFileHandler(), new TopicRepository()));
+        commands.put(ServerCommandType.LOAD, new LoadServerCommand(new JsonFileHandler(), new TopicRepository()));
     }
 
     public void dispatch(String fullCommand) {
