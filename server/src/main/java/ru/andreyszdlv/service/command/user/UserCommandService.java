@@ -19,7 +19,7 @@ public class UserCommandService {
         commands.put(UserCommandType.LOGIN, new LoginUserCommand());
         commands.put(UserCommandType.EXIT, new ExitUserCommand());
         commands.put(UserCommandType.CREATE_TOPIC, new CreateTopicUserCommand(new TopicRepository()));
-        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand());
+        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand(new TopicRepository()));
         commands.put(UserCommandType.VIEW, new ViewUserCommand());
         commands.put(UserCommandType.VOTE, new VoteUserCommand());
         commands.put(UserCommandType.DELETE, new DeleteUserCommand());

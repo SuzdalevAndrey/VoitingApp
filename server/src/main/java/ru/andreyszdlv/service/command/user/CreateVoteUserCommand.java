@@ -1,37 +1,42 @@
 package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.util.ParameterUtils;
 
+@RequiredArgsConstructor
 public class CreateVoteUserCommand implements UserCommandHandler {
 
-    private final TopicRepository topicRepository = new TopicRepository();
+    private final TopicRepository topicRepository;
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
 
-        if(paramsCommand.length != 1 || !paramsCommand[0].startsWith("-t=")) {
+        if(paramsCommand.length != 1) {
             ctx.writeAndFlush("Ошибка: неверная команда. Пример: create vote -t=НазваниеГолосования");
             return;
         }
 
-        String[] paramAndValue = paramsCommand[0].split("=");
+        String topicName = ParameterUtils.extractValueByPrefix(paramsCommand[0], "-t=");
 
-        if(paramAndValue.length != 2) {
-            ctx.writeAndFlush("Ошибка: неверное имя. " +
-                    "Не может быть пустым и не может содержать '='");
+        if(topicName == null) {
+            ctx.writeAndFlush("Ошибка: неверная команда. Пример: create vote -t=НазваниеГолосования");
             return;
         }
 
-        String topicName = paramAndValue[1];
+        if(topicName.isEmpty()) {
+            ctx.writeAndFlush("Ошибка: пустое имя!");
+            return;
+        }
 
         if(!topicRepository.containsTopicByName(topicName)) {
-            ctx.writeAndFlush("Ошибка: не существует топика с именем " + topicName + " !");
+            ctx.writeAndFlush(String.format("Ошибка: не существует топика с именем \"%s\"!", topicName));
             return;
         }
 
-        ctx.pipeline().remove(ctx.handler());
+        ctx.pipeline().removeLast();
 
         ctx.pipeline().addLast(new VoteDescriptionHandler(topicName));
 
