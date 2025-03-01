@@ -1,15 +1,16 @@
-package ru.andreyszdlv.service.command;
+package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
+import ru.andreyszdlv.service.command.CommandStrategy;
 import ru.andreyszdlv.util.ParameterUtils;
 
 import java.util.Optional;
 
-public class DeleteCommand implements CommandStrategy{
+public class DeleteCommand implements CommandStrategy {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

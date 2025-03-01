@@ -2,21 +2,21 @@ package ru.andreyszdlv.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import ru.andreyszdlv.service.command.CommandService;
+import ru.andreyszdlv.service.command.UserCommandService;
 
 public class CommandHandler extends SimpleChannelInboundHandler<String> {
 
-    private final CommandService commandService = new CommandService();
+    private final UserCommandService userCommandService = new UserCommandService();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String command) {
         System.out.println("Получена команда: " + command);
 
-        commandService.dispatch(ctx, command);
+        userCommandService.dispatch(ctx, command);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        commandService.dispatch(ctx, "logout");
+        userCommandService.dispatch(ctx, "logout");
     }
 }

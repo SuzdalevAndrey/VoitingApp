@@ -1,8 +1,9 @@
-package ru.andreyszdlv.service.command;
+package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.service.command.CommandStrategy;
 
 public class CreateVoteCommand implements CommandStrategy {
 

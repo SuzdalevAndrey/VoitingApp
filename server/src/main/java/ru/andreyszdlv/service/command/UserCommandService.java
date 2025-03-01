@@ -2,19 +2,20 @@ package ru.andreyszdlv.service.command;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.enums.CommandName;
+import ru.andreyszdlv.service.command.user.*;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandService {
+public class UserCommandService {
 
     private final Map<CommandName, CommandStrategy> commands = new HashMap<>();
 
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
-    public CommandService() {
+    public UserCommandService() {
         commands.put(CommandName.LOGIN, new LoginCommand());
         commands.put(CommandName.LOGOUT, new LogoutCommand());
         commands.put(CommandName.CREATE_TOPIC, new CreateTopicCommand());

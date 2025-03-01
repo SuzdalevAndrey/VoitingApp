@@ -10,6 +10,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import ru.andreyszdlv.config.ServerConfiguration;
 import ru.andreyszdlv.handler.CommandHandler;
 
+import java.util.Scanner;
+
 public class Server {
 
     private final int port;
@@ -28,9 +30,11 @@ public class Server {
 
         try {
             ServerBootstrap bootstrap = createBootstrap(bossGroup, workerGroup);
-
             ChannelFuture future = bootstrap.bind(port).sync();
+
             System.out.println("Сервер запущен на порту " + port);
+            commandListener(future, bossGroup, workerGroup);
+
             future.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
@@ -51,5 +55,38 @@ public class Server {
                         );
                     }
                 });
+    }
+
+    private void commandListener(ChannelFuture future,
+                                 EventLoopGroup bossGroup,
+                                 EventLoopGroup workerGroup) {
+        Thread commandThread = new Thread(() -> {
+            try(Scanner scanner = new Scanner(System.in)) {
+                while(true){
+                    String command = scanner.nextLine();
+                    if("exit".equals(command)){
+                        System.out.println("Завершение работы сервера...");
+                        shutdownServer(future, bossGroup, workerGroup);
+                        break;
+                    }
+                }
+            }
+        });
+
+        commandThread.setDaemon(true);
+        commandThread.start();
+    }
+
+    private void shutdownServer(ChannelFuture future,
+                                EventLoopGroup bossGroup,
+                                EventLoopGroup workerGroup) {
+        try {
+            future.channel().close().sync();
+            bossGroup.shutdownGracefully().sync();
+            workerGroup.shutdownGracefully().sync();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("Ошибка при завершении сервера: " + e.getMessage());
+        }
     }
 }
