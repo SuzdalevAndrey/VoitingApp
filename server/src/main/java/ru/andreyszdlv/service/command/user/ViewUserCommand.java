@@ -13,32 +13,21 @@ public class ViewUserCommand implements UserCommandHandler {
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
         switch(paramsCommand.length){
-            case 0:
-                handleNoParams(ctx);
-                break;
-            case 1:
-                handleSingleParam(ctx, paramsCommand);
-                break;
-            case 2:
-                handleTwoParams(ctx, paramsCommand);
-                break;
-            default:
-                ctx.writeAndFlush("Ошибка: неверная команда.");
+            case 0 -> handleNoParams(ctx);
+            case 1 -> handleSingleParam(ctx, paramsCommand);
+            case 2 -> handleTwoParams(ctx, paramsCommand);
+            default -> ctx.writeAndFlush("Ошибка: неверная команда.");
         }
     }
 
     private void handleNoParams(ChannelHandlerContext ctx){
         topicRepository.getAllTopics().forEach(
-                (name, topic)->ctx.write(
-                        String.format(
-                                "\"%s\" (votes in topic=%s)\n",
-                                name,
-                                topic.countVotes()
-                        )
+                (name, topic) -> ctx.writeAndFlush(String.format(
+                        "\"%s\" (votes in topic=%s)\n",
+                        name,
+                        topic.countVotes())
                 )
         );
-
-        ctx.flush();
     }
 
     private void handleSingleParam(ChannelHandlerContext ctx, String[] paramsCommand){
