@@ -9,7 +9,7 @@ import ru.andreyszdlv.util.ParameterUtils;
 
 import java.util.Optional;
 
-public class VoteUserCommand implements UserCommandStrategy {
+public class VoteUserCommand implements UserCommand {
 
     private final TopicRepository topicRepository = new TopicRepository();
 

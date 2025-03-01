@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.repo.TopicRepository;
 
-public class CreateTopicUserCommand implements UserCommandStrategy {
+public class CreateTopicUserCommand implements UserCommand {
 
     private final TopicRepository topicRepository = new TopicRepository();
 
