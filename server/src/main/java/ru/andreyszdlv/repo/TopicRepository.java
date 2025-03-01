@@ -5,46 +5,22 @@ import ru.andreyszdlv.model.Vote;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class TopicRepository {
+public interface TopicRepository {
 
-    private static final Map<String, Topic> topics = new ConcurrentHashMap<>();
+    void saveTopics(Map<String, Topic> saveTopics);
 
-    public void saveTopics(Map<String, Topic> saveTopics) {
-        topics.putAll(saveTopics);
-    }
+    void saveTopic(Topic topic);
 
-    public void saveTopic(Topic topic) {
-        topics.put(topic.getName(), topic);
-    }
+    boolean containsTopicByName(String topicName);
 
-    public boolean containsTopicByName(String topicName) {
-        return topics.containsKey(topicName);
-    }
+    void addVote(String topicName, Vote vote);
 
-    public void addVote(String topicName, Vote vote) {
-        Topic topic = topics.get(topicName);
-        if (topic == null) {
-            throw new IllegalArgumentException("Топик \"" + topicName + "\" не найден");
-        }
-        topic.getVotes().put(vote.getName(), vote);
-    }
+    boolean containsVoteByName(String topicName, String voteName);
 
-    public boolean containsVoteByName(String topicName, String voteName) {
-        Topic topic = topics.get(topicName);
-        return topic != null && topic.getVotes().containsKey(voteName);
-    }
+    Map<String, Topic> findAll();
 
-    public Map<String, Topic> getAllTopics() {
-        return topics;
-    }
+    Optional<Topic> findTopicByName(String topicName);
 
-    public Optional<Topic> getTopicByName(String topicName) {
-        return Optional.ofNullable(topics.get(topicName));
-    }
-
-    public void removeVote(String topicName, String voteName) {
-        getTopicByName(topicName).ifPresent(topic -> topic.getVotes().remove(voteName));
-    }
+    void removeVote(String topicName, String voteName);
 }

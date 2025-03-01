@@ -10,7 +10,7 @@ import io.netty.handler.codec.string.StringEncoder;
 import ru.andreyszdlv.config.ServerConfiguration;
 import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.handler.CommandHandler;
-import ru.andreyszdlv.repo.UserRepository;
+import ru.andreyszdlv.repo.InMemoryUserRepository;
 import ru.andreyszdlv.service.command.server.ServerCommandService;
 import ru.andreyszdlv.service.command.user.UserCommandService;
 import ru.andreyszdlv.validator.AuthenticationValidator;
@@ -58,7 +58,7 @@ public class Server {
                         socketChannel.pipeline().addLast(
                                 new StringDecoder(),
                                 new StringEncoder(),
-                                new CommandHandler(new UserCommandService(new AuthenticationValidator(new UserRepository())))
+                                new CommandHandler(new UserCommandService(new AuthenticationValidator(new InMemoryUserRepository())))
                         );
                     }
                 });

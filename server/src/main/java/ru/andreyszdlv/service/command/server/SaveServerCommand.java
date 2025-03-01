@@ -3,7 +3,6 @@ package ru.andreyszdlv.service.command.server;
 import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.service.file.FileHandler;
-import ru.andreyszdlv.service.file.JsonFileHandler;
 
 import java.io.IOException;
 
@@ -17,7 +16,7 @@ public class SaveServerCommand implements ServerCommandHandler {
     @Override
     public void execute(String paramCommand) {
         try {
-            fileHandler.save(paramCommand, topicRepository.getAllTopics());
+            fileHandler.save(paramCommand, topicRepository.findAll());
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

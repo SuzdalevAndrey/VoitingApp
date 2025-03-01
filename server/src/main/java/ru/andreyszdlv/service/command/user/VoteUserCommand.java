@@ -39,7 +39,7 @@ public class VoteUserCommand implements UserCommandHandler {
             return;
         }
 
-        Optional<Topic> topic = topicRepository.getTopicByName(topicName);
+        Optional<Topic> topic = topicRepository.findTopicByName(topicName);
 
         if(topic.isEmpty()) {
             ctx.writeAndFlush(String.format(

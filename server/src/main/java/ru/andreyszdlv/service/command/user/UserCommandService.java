@@ -2,8 +2,8 @@ package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.enums.UserCommandType;
-import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.repo.UserRepository;
+import ru.andreyszdlv.repo.InMemoryTopicRepository;
+import ru.andreyszdlv.repo.InMemoryUserRepository;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.Arrays;
@@ -17,15 +17,15 @@ public class UserCommandService {
     private final AuthenticationValidator authenticationValidator;
 
     public UserCommandService(AuthenticationValidator authenticationValidator) {
-        commands.put(UserCommandType.LOGIN, new LoginUserCommand(new UserRepository()));
-        commands.put(UserCommandType.EXIT, new ExitUserCommand(new UserRepository()));
+        commands.put(UserCommandType.LOGIN, new LoginUserCommand(new InMemoryUserRepository()));
+        commands.put(UserCommandType.EXIT, new ExitUserCommand(new InMemoryUserRepository()));
         commands.put(UserCommandType.CREATE_TOPIC,
-                new CreateTopicUserCommand(new TopicRepository()));
-        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand(new TopicRepository()));
-        commands.put(UserCommandType.VIEW, new ViewUserCommand(new TopicRepository()));
-        commands.put(UserCommandType.VOTE, new VoteUserCommand(new TopicRepository()));
+                new CreateTopicUserCommand(new InMemoryTopicRepository()));
+        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand(new InMemoryTopicRepository()));
+        commands.put(UserCommandType.VIEW, new ViewUserCommand(new InMemoryTopicRepository()));
+        commands.put(UserCommandType.VOTE, new VoteUserCommand(new InMemoryTopicRepository()));
         commands.put(UserCommandType.DELETE,
-                new DeleteUserCommand(new TopicRepository(), new UserRepository()));
+                new DeleteUserCommand(new InMemoryTopicRepository(), new InMemoryUserRepository()));
         this.authenticationValidator = authenticationValidator;
     }
 

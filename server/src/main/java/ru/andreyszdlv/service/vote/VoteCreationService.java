@@ -6,6 +6,7 @@ import lombok.Setter;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Vote;
+import ru.andreyszdlv.repo.InMemoryUserRepository;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
 import ru.andreyszdlv.service.command.user.UserCommandService;
@@ -40,7 +41,7 @@ public class VoteCreationService {
                                UserRepository userRepository) {
         this.topicName = topicName;
         stepHandlers = List.of(
-                new VoteNameStep(new TopicRepository(), topicName),
+                new VoteNameStep(topicRepository, topicName),
                 new VoteDescriptionStep(),
                 new VoteOptionsCountStep(),
                 new VoteOptionsStep()
@@ -75,12 +76,12 @@ public class VoteCreationService {
                 Vote.builder()
                         .name(voteName)
                         .description(description)
-                        .authorName(userRepository.getUsername(ctx.channel().id().asLongText()))
+                        .authorName(userRepository.findUserByChannelId(ctx.channel().id().asLongText()))
                         .answerOptions(options)
                         .build()
         );
         ctx.writeAndFlush("Голосование \"" + voteName + "\" успешно создано в топике \"" + topicName + "\".");
         ctx.pipeline().remove(ctx.handler());
-        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(new UserRepository()))));
+        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(new InMemoryUserRepository()))));
     }
 }

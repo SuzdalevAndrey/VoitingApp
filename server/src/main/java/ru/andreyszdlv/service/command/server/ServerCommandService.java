@@ -2,7 +2,7 @@ package ru.andreyszdlv.service.command.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.andreyszdlv.enums.ServerCommandType;
-import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.repo.InMemoryTopicRepository;
 import ru.andreyszdlv.service.file.JsonFileHandler;
 
 import java.util.Arrays;
@@ -15,9 +15,9 @@ public class ServerCommandService {
 
     public ServerCommandService() {
         commands.put(ServerCommandType.SAVE,
-                new SaveServerCommand(new JsonFileHandler(new ObjectMapper()), new TopicRepository()));
+                new SaveServerCommand(new JsonFileHandler(new ObjectMapper()), new InMemoryTopicRepository()));
         commands.put(ServerCommandType.LOAD,
-                new LoadServerCommand(new JsonFileHandler(new ObjectMapper()), new TopicRepository()));
+                new LoadServerCommand(new JsonFileHandler(new ObjectMapper()), new InMemoryTopicRepository()));
     }
 
     public void dispatch(String fullCommand) {

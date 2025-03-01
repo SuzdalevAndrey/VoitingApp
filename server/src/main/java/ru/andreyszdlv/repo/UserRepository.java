@@ -1,29 +1,14 @@
 package ru.andreyszdlv.repo;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+public interface UserRepository {
 
-public class UserRepository {
+    void saveUser(String channelId, String username);
 
-    private static final Map<String, String> users = new ConcurrentHashMap<>();
+    boolean containsUserByName(String username);
 
-    public void saveUser(String channelId, String username) {
-        users.put(channelId, username);
-    }
+    String removeUser(String channelId);
 
-    public boolean containsUserByName(String username) {
-        return users.containsValue(username);
-    }
+    boolean containsUserByChannelId(String channelId);
 
-    public String removeUser(String channelId) {
-        return users.remove(channelId);
-    }
-
-    public boolean containsUserByChannelId(String channelId) {
-        return users.containsKey(channelId);
-    }
-
-    public String getUsername(String channelId) {
-        return users.get(channelId);
-    }
+    String findUserByChannelId(String channelId);
 }

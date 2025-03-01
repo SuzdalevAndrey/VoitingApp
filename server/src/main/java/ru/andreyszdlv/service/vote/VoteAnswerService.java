@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.model.Vote;
+import ru.andreyszdlv.repo.InMemoryUserRepository;
 import ru.andreyszdlv.repo.UserRepository;
 import ru.andreyszdlv.service.command.user.UserCommandService;
 import ru.andreyszdlv.validator.AuthenticationValidator;
@@ -32,7 +33,7 @@ public class VoteAnswerService {
             return;
         }
 
-        String userName = userRepository.getUsername(ctx.channel().id().asLongText());
+        String userName = userRepository.findUserByChannelId(ctx.channel().id().asLongText());
 
         if(vote.getAnswerOptions().get(count - 1).getVotedUsers().contains(userName)){
             ctx.writeAndFlush("Ошибка: вы уже проголосовали за этот вариант!");
@@ -43,6 +44,6 @@ public class VoteAnswerService {
         ctx.writeAndFlush(String.format("Вы успешно проголосовали за #%d вариант", count));
 
         ctx.pipeline().removeLast();
-        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(new UserRepository()))));
+        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(new InMemoryUserRepository()))));
     }
 }

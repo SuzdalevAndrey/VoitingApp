@@ -38,7 +38,7 @@ public class DeleteUserCommand implements UserCommandHandler {
             return;
         }
 
-        Optional<Topic> topic = topicRepository.getTopicByName(topicName);
+        Optional<Topic> topic = topicRepository.findTopicByName(topicName);
 
         if(topic.isEmpty()) {
             ctx.writeAndFlush(String.format("Ошибка: топик с названием \"%s\" не найден!", topicName));
@@ -53,7 +53,7 @@ public class DeleteUserCommand implements UserCommandHandler {
         }
 
         if(!vote.get().getAuthorName()
-                .equals(userRepository.getUsername(ctx.channel().id().asLongText()))){
+                .equals(userRepository.findUserByChannelId(ctx.channel().id().asLongText()))){
             ctx.writeAndFlush(String.format(
                     "Ошибка: нельзя удалить голосование \"%s\", потому что оно создано не вами!",
                     voteName)

@@ -21,7 +21,7 @@ public class ViewUserCommand implements UserCommandHandler {
     }
 
     private void handleNoParams(ChannelHandlerContext ctx){
-        topicRepository.getAllTopics().forEach(
+        topicRepository.findAll().forEach(
                 (name, topic) -> ctx.writeAndFlush(String.format(
                         "\"%s\" (votes in topic=%s)\n",
                         name,
@@ -44,7 +44,7 @@ public class ViewUserCommand implements UserCommandHandler {
             return;
         }
 
-        topicRepository.getTopicByName(topicName)
+        topicRepository.findTopicByName(topicName)
                 .ifPresentOrElse(
                         topic -> ctx.writeAndFlush(topic.toString()),
                         () -> ctx.writeAndFlush(String.format(
@@ -70,7 +70,7 @@ public class ViewUserCommand implements UserCommandHandler {
             return;
         }
 
-        topicRepository.getTopicByName(topicName)
+        topicRepository.findTopicByName(topicName)
                 .ifPresentOrElse(
                         topic -> topic.getVoteByName(voteName)
                                 .ifPresentOrElse(
