@@ -11,7 +11,7 @@ public enum UserCommandType {
     DELETE("delete"),
     VIEW("view"),
     VOTE("vote"),
-    LOGOUT("logout");
+    EXIT("exit");
 
     private final String name;
 

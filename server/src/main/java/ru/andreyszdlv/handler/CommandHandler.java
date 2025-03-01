@@ -2,6 +2,7 @@ package ru.andreyszdlv.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import ru.andreyszdlv.enums.UserCommandType;
 import ru.andreyszdlv.service.command.user.UserCommandService;
 
 public class CommandHandler extends SimpleChannelInboundHandler<String> {
@@ -17,6 +18,6 @@ public class CommandHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        userCommandService.dispatch(ctx, "logout");
+        userCommandService.dispatch(ctx, UserCommandType.EXIT.getName());
     }
 }

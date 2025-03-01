@@ -16,7 +16,7 @@ public class UserCommandService {
 
     public UserCommandService() {
         commands.put(UserCommandType.LOGIN, new LoginUserCommand());
-        commands.put(UserCommandType.LOGOUT, new LogoutUserCommand());
+        commands.put(UserCommandType.EXIT, new ExitUserCommand());
         commands.put(UserCommandType.CREATE_TOPIC, new CreateTopicUserCommand());
         commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand());
         commands.put(UserCommandType.VIEW, new ViewUserCommand());
