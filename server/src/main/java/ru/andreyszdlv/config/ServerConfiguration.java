@@ -1,13 +1,11 @@
 package ru.andreyszdlv.config;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.io.InputStream;
 import java.util.Properties;
 
 @Getter
-@Setter
 public class ServerConfiguration {
 
     private int port;
