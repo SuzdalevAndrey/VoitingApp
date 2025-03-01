@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import ru.andreyszdlv.config.ServerConfiguration;
+import ru.andreyszdlv.enums.ServerCommand;
 import ru.andreyszdlv.handler.CommandHandler;
 
 import java.util.Scanner;
@@ -64,7 +65,7 @@ public class Server {
             try(Scanner scanner = new Scanner(System.in)) {
                 while(true){
                     String command = scanner.nextLine();
-                    if("exit".equals(command)){
+                    if(command.equals(ServerCommand.EXIT.getName())){
                         System.out.println("Завершение работы сервера...");
                         shutdownServer(future, bossGroup, workerGroup);
                         break;

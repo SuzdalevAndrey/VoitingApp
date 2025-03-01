@@ -3,7 +3,7 @@ package ru.andreyszdlv.enums;
 import lombok.Getter;
 
 @Getter
-public enum CommandName {
+public enum UserCommand {
 
     LOGIN("login"),
     CREATE_TOPIC("create topic"),
@@ -15,7 +15,7 @@ public enum CommandName {
 
     private final String name;
 
-    CommandName(String name){
+    UserCommand(String name){
         this.name = name;
     }
 }

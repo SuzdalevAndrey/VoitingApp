@@ -1,7 +1,7 @@
 package ru.andreyszdlv.service.command;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.andreyszdlv.enums.CommandName;
+import ru.andreyszdlv.enums.UserCommand;
 import ru.andreyszdlv.service.command.user.*;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
@@ -11,24 +11,24 @@ import java.util.Map;
 
 public class UserCommandService {
 
-    private final Map<CommandName, CommandStrategy> commands = new HashMap<>();
+    private final Map<UserCommand, CommandStrategy> commands = new HashMap<>();
 
     private final AuthenticationValidator authenticationValidator = new AuthenticationValidator();
 
     public UserCommandService() {
-        commands.put(CommandName.LOGIN, new LoginCommand());
-        commands.put(CommandName.LOGOUT, new LogoutCommand());
-        commands.put(CommandName.CREATE_TOPIC, new CreateTopicCommand());
-        commands.put(CommandName.CREATE_VOTE, new CreateVoteCommand());
-        commands.put(CommandName.VIEW, new ViewCommand());
-        commands.put(CommandName.VOTE, new VoteCommand());
-        commands.put(CommandName.DELETE, new DeleteCommand());
+        commands.put(UserCommand.LOGIN, new LoginCommand());
+        commands.put(UserCommand.LOGOUT, new LogoutCommand());
+        commands.put(UserCommand.CREATE_TOPIC, new CreateTopicCommand());
+        commands.put(UserCommand.CREATE_VOTE, new CreateVoteCommand());
+        commands.put(UserCommand.VIEW, new ViewCommand());
+        commands.put(UserCommand.VOTE, new VoteCommand());
+        commands.put(UserCommand.DELETE, new DeleteCommand());
     }
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
         String trimmedCommand = fullCommand.trim();
 
-        CommandName command = Arrays.stream(CommandName.values())
+        UserCommand command = Arrays.stream(UserCommand.values())
                 .filter(cmd -> trimmedCommand.startsWith(cmd.getName()))
                 .findFirst()
                 .orElse(null);
@@ -38,7 +38,7 @@ public class UserCommandService {
             return;
         }
 
-        if(!command.equals(CommandName.LOGIN)
+        if(!command.equals(UserCommand.LOGIN)
                 && !authenticationValidator.isAuthenticated(ctx.channel())) {
             ctx.writeAndFlush("Ошибка: перед выполнением действий надо войти в систему. " +
                     "Пример: login -u=user");
