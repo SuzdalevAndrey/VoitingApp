@@ -4,11 +4,15 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.factory.RepositoryFactory;
 import ru.andreyszdlv.handler.CommandHandler;
+import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.UserRepository;
 import ru.andreyszdlv.service.command.user.UserCommandService;
 import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.validator.AuthenticationValidator;
+
+import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class VoteAnswerService {
@@ -18,7 +22,7 @@ public class VoteAnswerService {
     private final Vote vote;
 
     public void answer(ChannelHandlerContext ctx, String answer){
-        int option = 0;
+        int option;
         try {
             option = Integer.parseInt(answer);
             if (option <= 0) {
@@ -27,22 +31,27 @@ public class VoteAnswerService {
             }
         } catch (NumberFormatException e) {
             ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.invalid"));
+            return;
         }
 
-        if(option > vote.getAnswerOptions().size()){
+        List<AnswerOption> answerOptions = vote.getAnswerOptions();
+
+        if(option > answerOptions.size()){
             ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.invalid"));
             return;
         }
 
         String userName = userRepository.findUserByChannelId(ctx.channel().id().asLongText());
 
-        if(vote.getAnswerOptions().get(option - 1).getVotedUsers().contains(userName)){
+        Set<String> votedUsers = answerOptions.get(option - 1).getVotedUsers();
+
+        if(votedUsers.contains(userName)){
                 ctx.writeAndFlush(MessageProviderUtil
                         .getMessage("error.vote.option.already_choose"));
             return;
         }
 
-        vote.getAnswerOptions().get(option - 1).getVotedUsers().add(userName);
+        votedUsers.add(userName);
         ctx.writeAndFlush(MessageProviderUtil.getMessage("vote.success", option));
 
         ctx.pipeline().removeLast();
