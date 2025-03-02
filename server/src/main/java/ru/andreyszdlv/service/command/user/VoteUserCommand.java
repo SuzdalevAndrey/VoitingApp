@@ -7,6 +7,7 @@ import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.util.ParameterUtils;
 
 import java.util.List;
@@ -20,8 +21,7 @@ public class VoteUserCommand implements UserCommandHandler {
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
         if(paramsCommand.length != 2) {
-            ctx.writeAndFlush("Ошибка: неверная команда. " +
-                    "Пример: vote -t=НазваниеТопика -v=НазваниеГолосования");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid_command"));
             return;
         }
 
@@ -29,31 +29,26 @@ public class VoteUserCommand implements UserCommandHandler {
         String voteName = ParameterUtils.extractValueByPrefix(paramsCommand[1], "-v=");
 
         if(topicName == null || voteName == null) {
-            ctx.writeAndFlush("Ошибка: неверная команда. " +
-                    "Пример: vote -t=НазваниеТопика -v=НазваниеГолосования");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid_command"));
             return;
         }
 
         if(topicName.isBlank() || voteName.isBlank()){
-            ctx.writeAndFlush("Ошибка: название топика или название голосования пустое!");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.vote.name.empty"));
             return;
         }
 
         Optional<Topic> topic = topicRepository.findTopicByName(topicName);
 
         if(topic.isEmpty()) {
-            ctx.writeAndFlush(String.format(
-                    "Ошибка: топик с названием \"%s\" не найден!",
-                    topicName));
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.not_found", topicName));
             return;
         }
 
         Optional<Vote> vote = topic.get().getVoteByName(voteName);
 
         if(vote.isEmpty()) {
-            ctx.writeAndFlush(String.format(
-                    "Ошибка: голосование с названием \"%s\" не найдено!",
-                    voteName));
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.not_found", voteName));
             return;
         }
 
@@ -62,7 +57,7 @@ public class VoteUserCommand implements UserCommandHandler {
         for (int i = 0; i < options.size(); i++) {
             response.append(String.format("Вариант #%d: %s\n", (i + 1), options.get(i).getAnswer()));
         }
-        response.append("Выберите вариант ответа. Написать нужно только число.");
+        response.append(MessageProviderUtil.getMessage("command.vote.success"));
         ctx.writeAndFlush(response.toString());
 
         ctx.pipeline().removeLast();
