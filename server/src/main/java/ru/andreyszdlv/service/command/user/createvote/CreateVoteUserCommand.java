@@ -1,9 +1,10 @@
-package ru.andreyszdlv.service.command.user;
+package ru.andreyszdlv.service.command.user.createvote;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.service.command.user.UserCommandHandler;
 import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.util.ParameterUtils;
 

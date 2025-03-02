@@ -1,8 +1,9 @@
-package ru.andreyszdlv.service.vote;
+package ru.andreyszdlv.service.command.user.createvote;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.util.MessageProviderUtil;
 
 @RequiredArgsConstructor
 public class VoteNameStep implements VoteStepStrategy {
@@ -15,12 +16,11 @@ public class VoteNameStep implements VoteStepStrategy {
     public void execute(ChannelHandlerContext ctx, String message, VoteCreationService service) {
         message = message.trim();
         if(topicRepository.containsVoteByName(topicName, message)){
-            ctx.writeAndFlush("Ошибка: такое название уже содержится в топике." +
-                    " Введите уникальное название:");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.already_exist"));
             return;
         }
         service.setVoteName(message);
         service.nextStep();
-        ctx.writeAndFlush("Введите тему голосования:");
+        ctx.writeAndFlush(MessageProviderUtil.getMessage("vote.description"));
     }
 }

@@ -1,4 +1,4 @@
-package ru.andreyszdlv.service.vote;
+package ru.andreyszdlv.service.command.user.createvote;
 
 import io.netty.channel.ChannelHandlerContext;
 

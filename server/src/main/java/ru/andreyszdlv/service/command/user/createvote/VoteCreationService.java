@@ -1,4 +1,4 @@
-package ru.andreyszdlv.service.vote;
+package ru.andreyszdlv.service.command.user.createvote;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
@@ -10,6 +10,7 @@ import ru.andreyszdlv.repo.InMemoryUserRepository;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
 import ru.andreyszdlv.service.command.user.UserCommandService;
+import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class VoteCreationService {
                         .answerOptions(options)
                         .build()
         );
-        ctx.writeAndFlush("Голосование \"" + voteName + "\" успешно создано в топике \"" + topicName + "\".");
+        ctx.writeAndFlush(MessageProviderUtil.getMessage("create_vote.success", voteName, topicName));
         ctx.pipeline().remove(ctx.handler());
         ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(new InMemoryUserRepository()))));
     }

@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import ru.andreyszdlv.repo.InMemoryTopicRepository;
 import ru.andreyszdlv.repo.InMemoryUserRepository;
-import ru.andreyszdlv.service.vote.VoteCreationService;
+import ru.andreyszdlv.service.command.user.createvote.VoteCreationService;
 
 public class VoteDescriptionHandler extends SimpleChannelInboundHandler<String> {
 

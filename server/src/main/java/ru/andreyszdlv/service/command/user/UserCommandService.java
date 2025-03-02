@@ -4,6 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.enums.UserCommandType;
 import ru.andreyszdlv.repo.InMemoryTopicRepository;
 import ru.andreyszdlv.repo.InMemoryUserRepository;
+import ru.andreyszdlv.service.command.user.createvote.CreateVoteUserCommand;
+import ru.andreyszdlv.service.command.user.vote.VoteUserCommand;
 import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 

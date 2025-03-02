@@ -1,6 +1,7 @@
-package ru.andreyszdlv.service.vote;
+package ru.andreyszdlv.service.command.user.createvote;
 
 import io.netty.channel.ChannelHandlerContext;
+import ru.andreyszdlv.util.MessageProviderUtil;
 
 public class VoteOptionsCountStep implements VoteStepStrategy{
     @Override
@@ -8,14 +9,14 @@ public class VoteOptionsCountStep implements VoteStepStrategy{
         try {
             int count = Integer.parseInt(message);
             if (count <= 0) {
-                ctx.writeAndFlush("Количество вариантов должно быть положительным числом.");
+                ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.options_count.negative"));
                 return;
             }
             service.setNumberOfOptions(count);
             service.nextStep();
-            ctx.writeAndFlush("Введите вариант ответа #1:");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("vote.option",1));
         } catch (NumberFormatException e) {
-            ctx.writeAndFlush("Пожалуйста, введите правильное число вариантов.");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.options_count.invalid"));
         }
     }
 }
