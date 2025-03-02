@@ -1,9 +1,8 @@
 package ru.andreyszdlv.service.command.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.andreyszdlv.enums.ServerCommandType;
+import ru.andreyszdlv.factory.FileHandlerFactory;
 import ru.andreyszdlv.factory.RepositoryFactory;
-import ru.andreyszdlv.service.file.JsonFileHandler;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,11 +15,11 @@ public class ServerCommandService {
     public ServerCommandService() {
         commands.put(ServerCommandType.SAVE,
                 new SaveServerCommand(
-                        new JsonFileHandler(new ObjectMapper()),
+                        FileHandlerFactory.getFileHandler(),
                         RepositoryFactory.getTopicRepository()));
         commands.put(ServerCommandType.LOAD,
                 new LoadServerCommand(
-                        new JsonFileHandler(new ObjectMapper()),
+                        FileHandlerFactory.getFileHandler(),
                         RepositoryFactory.getTopicRepository()));
     }
 
