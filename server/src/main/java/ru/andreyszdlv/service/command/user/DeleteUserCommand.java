@@ -6,6 +6,7 @@ import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
+import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.util.ParameterUtils;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class DeleteUserCommand implements UserCommandHandler {
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
 
         if(paramsCommand.length != 2) {
-            ctx.writeAndFlush("Ошибка: неверная команда. Пример: delete -t=НазваниеТопика -v=НазваниеГолосования");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.delete.invalid"));
             return;
         }
 
@@ -29,39 +30,36 @@ public class DeleteUserCommand implements UserCommandHandler {
         String voteName = ParameterUtils.extractValueByPrefix(paramsCommand[1], "-v=");
 
         if(topicName == null || voteName == null) {
-            ctx.writeAndFlush("Ошибка: неверная команда. Пример: delete -t=НазваниеТопика -v=НазваниеГолосования");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.delete.invalid"));
             return;
         }
 
         if(topicName.isBlank() || voteName.isBlank()) {
-            ctx.writeAndFlush("Ошибка: название топика или название голосования пустое!");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.vote.name.empty"));
             return;
         }
 
         Optional<Topic> topic = topicRepository.findTopicByName(topicName);
 
         if(topic.isEmpty()) {
-            ctx.writeAndFlush(String.format("Ошибка: топик с названием \"%s\" не найден!", topicName));
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.not_found", topicName));
             return;
         }
 
         Optional<Vote> vote = topic.get().getVoteByName(voteName);
 
         if(vote.isEmpty()) {
-            ctx.writeAndFlush(String.format("Ошибка: голосование с названием \"%s\" не найдено!", voteName));
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.not_found", voteName));
             return;
         }
 
         if(!vote.get().getAuthorName()
                 .equals(userRepository.findUserByChannelId(ctx.channel().id().asLongText()))){
-            ctx.writeAndFlush(String.format(
-                    "Ошибка: нельзя удалить голосование \"%s\", потому что оно создано не вами!",
-                    voteName)
-            );
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.no_delete", voteName));
             return;
         }
 
         topicRepository.removeVote(topicName, voteName);
-        ctx.writeAndFlush(String.format("Голосование \"%s\" успешно удалено!", voteName));
+        ctx.writeAndFlush(MessageProviderUtil.getMessage("command.delete.success", voteName));
     }
 }
