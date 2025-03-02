@@ -28,7 +28,7 @@ public class CreateVoteUserCommand implements UserCommandHandler {
             return;
         }
 
-        if(topicName.isEmpty()) {
+        if(topicName.isBlank()) {
             ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.empty"));
             return;
         }
