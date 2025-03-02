@@ -13,8 +13,6 @@ public class CommandHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String command) {
-        System.out.println("Получена команда: " + command);
-
         userCommandService.dispatch(ctx, command);
     }
 

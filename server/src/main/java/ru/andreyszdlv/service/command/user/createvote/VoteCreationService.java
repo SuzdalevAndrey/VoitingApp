@@ -3,6 +3,7 @@ package ru.andreyszdlv.service.command.user.createvote;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import ru.andreyszdlv.factory.RepositoryFactory;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.model.AnswerOption;
@@ -16,6 +17,7 @@ import ru.andreyszdlv.validator.AuthenticationValidator;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Setter
 public class VoteCreationService {
 
@@ -52,14 +54,17 @@ public class VoteCreationService {
     }
 
     public void processInput(ChannelHandlerContext ctx, String message){
+        log.info("Processing input for vote creation: step {} with message: {}", step, message);
         stepHandlers.get(step).execute(ctx, message, this);
     }
 
     public void nextStep() {
+        log.info("Moving to next step from step {}", step);
         ++step;
     }
 
     public void addOption(String option) {
+        log.info("Adding new option: \"{}\"", option);
         options.add(new AnswerOption(option));
     }
 
@@ -72,6 +77,10 @@ public class VoteCreationService {
     }
 
     public void completeVote(ChannelHandlerContext ctx){
+        log.info("Completing vote creation for topic \"{}\" with vote name \"{}\"",
+                topicName,
+                voteName);
+
         topicRepository.addVote(
                 topicName,
                 Vote.builder()
@@ -84,5 +93,6 @@ public class VoteCreationService {
         ctx.writeAndFlush(MessageProviderUtil.getMessage("create_vote.success", voteName, topicName));
         ctx.pipeline().remove(ctx.handler());
         ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(RepositoryFactory.getUserRepository()))));
+        log.info("Vote creation completed and pipeline handler updated.");
     }
 }
