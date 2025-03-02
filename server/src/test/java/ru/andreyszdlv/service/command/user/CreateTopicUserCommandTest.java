@@ -1,17 +1,18 @@
 package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.util.MessageProviderUtil;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CreateTopicUserCommandTest {
 
     @Mock
@@ -23,19 +24,14 @@ class CreateTopicUserCommandTest {
     @InjectMocks
     CreateTopicUserCommand createTopicUserCommand;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     void execute_SendErrorMessage_WhenCountParamInvalid() {
         String[] params = new String[]{};
 
         createTopicUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1)).writeAndFlush(MessageProviderUtil
-                .getMessage("error.command.create_topic.invalid"));
+        verify(ctx, times(1))
+                .writeAndFlush(MessageProviderUtil.getMessage("error.command.create_topic.invalid"));
         verifyNoInteractions(topicRepository);
     }
 
@@ -45,8 +41,8 @@ class CreateTopicUserCommandTest {
 
         createTopicUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1)).writeAndFlush(MessageProviderUtil
-                .getMessage("error.command.create_topic.invalid"));
+        verify(ctx, times(1))
+                .writeAndFlush(MessageProviderUtil.getMessage("error.command.create_topic.invalid"));
         verifyNoInteractions(topicRepository);
     }
 
@@ -56,8 +52,8 @@ class CreateTopicUserCommandTest {
 
         createTopicUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1)).writeAndFlush(MessageProviderUtil
-                .getMessage("error.topic.name.empty"));
+        verify(ctx, times(1))
+                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.empty"));
         verifyNoInteractions(topicRepository);
     }
 
@@ -69,7 +65,8 @@ class CreateTopicUserCommandTest {
 
         createTopicUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1)).writeAndFlush(any());
+        verify(ctx, times(1))
+                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.already_exist", topicName));
         verify(topicRepository, times(1)).containsTopicByName(topicName);
         verifyNoMoreInteractions(topicRepository);
     }
@@ -82,7 +79,8 @@ class CreateTopicUserCommandTest {
 
         createTopicUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1)).writeAndFlush(any());
+        verify(ctx, times(1))
+                .writeAndFlush(MessageProviderUtil.getMessage("command.create_topic.success", topicName));
         verify(topicRepository, times(1)).containsTopicByName(topicName);
         verify(topicRepository, times(1)).saveTopic(any(Topic.class));
         verifyNoMoreInteractions(topicRepository);
