@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.enums.UserCommandType;
 import ru.andreyszdlv.repo.InMemoryTopicRepository;
 import ru.andreyszdlv.repo.InMemoryUserRepository;
+import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.Arrays;
@@ -38,14 +39,13 @@ public class UserCommandService {
                 .orElse(null);
 
         if (command == null) {
-            ctx.writeAndFlush("Ошибка: неизвестная команда: " + trimmedCommand);
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.unknown_command", trimmedCommand));
             return;
         }
 
         if(!command.equals(UserCommandType.LOGIN)
                 && !authenticationValidator.isAuthenticated(ctx.channel())) {
-            ctx.writeAndFlush("Ошибка: перед выполнением действий надо войти в систему. " +
-                    "Пример: login -u=user");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.invalid_authentication"));
             return;
         }
 
@@ -53,7 +53,9 @@ public class UserCommandService {
         String[] params = paramsPart.isEmpty() ? new String[0] : paramsPart.split("\\s+");
 
         commands.getOrDefault(command,
-                (c, p) -> ctx.writeAndFlush("Ошибка: неизвестная команда: " + trimmedCommand))
+                (c, p) ->
+                        ctx.writeAndFlush(MessageProviderUtil
+                                .getMessage("error.unknown_command", trimmedCommand)))
                 .execute(ctx, params);
     }
 }
