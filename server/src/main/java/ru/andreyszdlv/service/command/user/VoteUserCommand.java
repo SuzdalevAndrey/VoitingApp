@@ -21,7 +21,7 @@ public class VoteUserCommand implements UserCommandHandler {
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
         if(paramsCommand.length != 2) {
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid_command"));
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid"));
             return;
         }
 
@@ -29,7 +29,7 @@ public class VoteUserCommand implements UserCommandHandler {
         String voteName = ParameterUtils.extractValueByPrefix(paramsCommand[1], "-v=");
 
         if(topicName == null || voteName == null) {
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid_command"));
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid"));
             return;
         }
 
