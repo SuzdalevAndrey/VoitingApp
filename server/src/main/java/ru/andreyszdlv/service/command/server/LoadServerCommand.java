@@ -1,11 +1,13 @@
 package ru.andreyszdlv.service.command.server;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.service.file.FileHandler;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class LoadServerCommand implements ServerCommandHandler{
 
@@ -15,10 +17,14 @@ public class LoadServerCommand implements ServerCommandHandler{
 
     @Override
     public void execute(String paramCommand) {
+        log.info("Executing load server command with parameter: \"{}\"", paramCommand);
+
         try {
+            log.info("Attempting load topics from file: \"{}\"", paramCommand);
             topicRepository.saveTopics(fileHandler.load(paramCommand));
+            log.info("Successfully loaded and saved topics from file: '{}'", paramCommand);
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            log.error("Error load topics from file: \"{}\". Exception: {}", paramCommand, e.getMessage());
         }
     }
 }
