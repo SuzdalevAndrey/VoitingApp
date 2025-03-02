@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import ru.andreyszdlv.handler.VoteDescriptionHandler;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.util.ParameterUtils;
 
 @RequiredArgsConstructor
@@ -15,24 +16,24 @@ public class CreateVoteUserCommand implements UserCommandHandler {
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
 
         if(paramsCommand.length != 1) {
-            ctx.writeAndFlush("Ошибка: неверная команда. Пример: create vote -t=НазваниеГолосования");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.create_vote.invalid"));
             return;
         }
 
         String topicName = ParameterUtils.extractValueByPrefix(paramsCommand[0], "-t=");
 
         if(topicName == null) {
-            ctx.writeAndFlush("Ошибка: неверная команда. Пример: create vote -t=НазваниеГолосования");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.create_vote.invalid"));
             return;
         }
 
         if(topicName.isEmpty()) {
-            ctx.writeAndFlush("Ошибка: пустое имя!");
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.empty"));
             return;
         }
 
         if(!topicRepository.containsTopicByName(topicName)) {
-            ctx.writeAndFlush(String.format("Ошибка: не существует топика с именем \"%s\"!", topicName));
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.not_found", topicName));
             return;
         }
 
@@ -40,6 +41,6 @@ public class CreateVoteUserCommand implements UserCommandHandler {
 
         ctx.pipeline().addLast(new VoteDescriptionHandler(topicName));
 
-        ctx.writeAndFlush("Введите уникальное название для голосования");
+        ctx.writeAndFlush(MessageProviderUtil.getMessage("command.create_vote.success"));
     }
 }
