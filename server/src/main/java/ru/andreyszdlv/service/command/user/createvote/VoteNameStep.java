@@ -15,10 +15,17 @@ public class VoteNameStep implements VoteStepStrategy {
     @Override
     public void execute(ChannelHandlerContext ctx, String message, VoteCreationService service) {
         String voteName = message.trim().split(" ")[0];
+
+        if(voteName.isBlank()){
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.name.empty"));
+            return;
+        }
+
         if(topicRepository.containsVoteByName(topicName, voteName)){
             ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.already_exist", voteName));
             return;
         }
+
         service.setVoteName(voteName);
         service.nextStep();
         ctx.writeAndFlush(MessageProviderUtil.getMessage("vote.description"));
