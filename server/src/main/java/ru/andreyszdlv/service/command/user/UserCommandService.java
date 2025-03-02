@@ -2,8 +2,7 @@ package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.andreyszdlv.enums.UserCommandType;
-import ru.andreyszdlv.repo.InMemoryTopicRepository;
-import ru.andreyszdlv.repo.InMemoryUserRepository;
+import ru.andreyszdlv.factory.RepositoryFactory;
 import ru.andreyszdlv.service.command.user.createvote.CreateVoteUserCommand;
 import ru.andreyszdlv.service.command.user.vote.VoteUserCommand;
 import ru.andreyszdlv.util.MessageProviderUtil;
@@ -20,15 +19,15 @@ public class UserCommandService {
     private final AuthenticationValidator authenticationValidator;
 
     public UserCommandService(AuthenticationValidator authenticationValidator) {
-        commands.put(UserCommandType.LOGIN, new LoginUserCommand(new InMemoryUserRepository()));
-        commands.put(UserCommandType.EXIT, new ExitUserCommand(new InMemoryUserRepository()));
+        commands.put(UserCommandType.LOGIN, new LoginUserCommand(RepositoryFactory.getUserRepository()));
+        commands.put(UserCommandType.EXIT, new ExitUserCommand(RepositoryFactory.getUserRepository()));
         commands.put(UserCommandType.CREATE_TOPIC,
-                new CreateTopicUserCommand(new InMemoryTopicRepository()));
-        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand(new InMemoryTopicRepository()));
-        commands.put(UserCommandType.VIEW, new ViewUserCommand(new InMemoryTopicRepository()));
-        commands.put(UserCommandType.VOTE, new VoteUserCommand(new InMemoryTopicRepository()));
+                new CreateTopicUserCommand(RepositoryFactory.getTopicRepository()));
+        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand(RepositoryFactory.getTopicRepository()));
+        commands.put(UserCommandType.VIEW, new ViewUserCommand(RepositoryFactory.getTopicRepository()));
+        commands.put(UserCommandType.VOTE, new VoteUserCommand(RepositoryFactory.getTopicRepository()));
         commands.put(UserCommandType.DELETE,
-                new DeleteUserCommand(new InMemoryTopicRepository(), new InMemoryUserRepository()));
+                new DeleteUserCommand(RepositoryFactory.getTopicRepository(), RepositoryFactory.getUserRepository()));
         this.authenticationValidator = authenticationValidator;
     }
 

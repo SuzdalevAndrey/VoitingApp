@@ -2,9 +2,9 @@ package ru.andreyszdlv.service.command.user.vote;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
+import ru.andreyszdlv.factory.RepositoryFactory;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.model.Vote;
-import ru.andreyszdlv.repo.InMemoryUserRepository;
 import ru.andreyszdlv.repo.UserRepository;
 import ru.andreyszdlv.service.command.user.UserCommandService;
 import ru.andreyszdlv.util.MessageProviderUtil;
@@ -46,6 +46,6 @@ public class VoteAnswerService {
         ctx.writeAndFlush(MessageProviderUtil.getMessage("vote.success", option));
 
         ctx.pipeline().removeLast();
-        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(new InMemoryUserRepository()))));
+        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(RepositoryFactory.getUserRepository()))));
     }
 }
