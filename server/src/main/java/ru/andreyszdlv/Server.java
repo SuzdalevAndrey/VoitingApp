@@ -7,6 +7,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import lombok.extern.slf4j.Slf4j;
 import ru.andreyszdlv.config.ServerConfiguration;
 import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.factory.RepositoryFactory;
@@ -17,6 +18,7 @@ import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.Scanner;
 
+@Slf4j
 public class Server {
 
     private final int port;
@@ -39,10 +41,10 @@ public class Server {
             ServerBootstrap bootstrap = createBootstrap(bossGroup, workerGroup);
             ChannelFuture future = bootstrap.bind(port).sync();
 
-            System.out.println("Сервер запущен на порту " + port);
-            commandListener(future, bossGroup, workerGroup);
+            log.info("The server is running on port: {}", port);
+            commandListener();
 
-            future.channel().closeFuture().sync();
+            future.channel().close().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
@@ -64,37 +66,16 @@ public class Server {
                 });
     }
 
-    private void commandListener(ChannelFuture future,
-                                 EventLoopGroup bossGroup,
-                                 EventLoopGroup workerGroup) {
-        Thread commandThread = new Thread(() -> {
-            try(Scanner scanner = new Scanner(System.in)) {
-                while(true){
-                    String command = scanner.nextLine();
-                    if(command.equals(ServerCommandType.EXIT.getName())){
-                        System.out.println("Завершение работы сервера...");
-                        shutdownServer(future, bossGroup, workerGroup);
-                        break;
-                    }
-                    serverCommandService.dispatch(command);
+    private void commandListener() {
+        try(Scanner scanner = new Scanner(System.in)) {
+            while(true){
+                String command = scanner.nextLine();
+                if(command.equals(ServerCommandType.EXIT.getName())){
+                    log.info("Shutting down the server...");
+                    break;
                 }
+                serverCommandService.dispatch(command);
             }
-        });
-
-        commandThread.setDaemon(true);
-        commandThread.start();
-    }
-
-    private void shutdownServer(ChannelFuture future,
-                                EventLoopGroup bossGroup,
-                                EventLoopGroup workerGroup) {
-        try {
-            future.channel().close().sync();
-            bossGroup.shutdownGracefully().sync();
-            workerGroup.shutdownGracefully().sync();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.err.println("Ошибка при завершении сервера: " + e.getMessage());
         }
     }
 }
