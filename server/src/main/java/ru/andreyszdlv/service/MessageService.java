@@ -10,4 +10,8 @@ public class MessageService {
     public void sendMessageByKey(ChannelHandlerContext ctx, String messageKey, Object... args) {
         ctx.writeAndFlush(MessageProviderUtil.getMessage(messageKey, args));
     }
+
+    public void sendMessage(ChannelHandlerContext ctx, String message){
+        ctx.writeAndFlush(message);
+    }
 }

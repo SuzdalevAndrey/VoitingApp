@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.andreyszdlv.enums.UserCommandType;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.util.MessageProviderUtil;
+import ru.andreyszdlv.service.MessageService;
 import ru.andreyszdlv.util.ParamUtil;
 
 @Slf4j
@@ -15,6 +15,7 @@ import ru.andreyszdlv.util.ParamUtil;
 public class ViewUserCommand implements UserCommandHandler {
 
     private final TopicRepository topicRepository;
+    private final MessageService messageService;
 
     @Override
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
@@ -26,7 +27,7 @@ public class ViewUserCommand implements UserCommandHandler {
             case 2 -> handleTwoParams(ctx, paramsCommand);
             default -> {
                 log.warn("Invalid number of parameters for view command");
-                ctx.writeAndFlush(MessageProviderUtil.getMessage("error.invalid_command"));
+                messageService.sendMessageByKey(ctx, "error.invalid_command");
             }
         }
     }
@@ -41,16 +42,15 @@ public class ViewUserCommand implements UserCommandHandler {
         StringBuilder response = new StringBuilder();
 
         topicRepository.findAll().forEach((name, topic) ->
-                response.append(String.format("\"%s\" (votes in topic=%d)\n", name, topic.countVotes()))
-        );
+                response.append(String.format("\"%s\" (votes in topic=%d)\n", name, topic.countVotes())));
 
-        if (response.length() > 0) {
+        if (!response.isEmpty()) {
             response.setLength(response.length() - System.lineSeparator().length());
-            ctx.writeAndFlush(response.toString());
+            messageService.sendMessage(ctx, response.toString());
             return;
         }
 
-        ctx.writeAndFlush(MessageProviderUtil.getMessage("view.topics.not_found"));
+        messageService.sendMessageByKey(ctx, "view.topics.not_found");
     }
 
     private void handleSingleParam(ChannelHandlerContext ctx, String[] paramsCommand) {
@@ -62,12 +62,13 @@ public class ViewUserCommand implements UserCommandHandler {
                 .ifPresentOrElse(
                         topic -> {
                             log.info("Topic found: \"{}\"", topicName);
-                            ctx.writeAndFlush(topic.toString());
+                            messageService.sendMessage(ctx, topic.toString());
                         },
                         () -> {
                             log.warn("Topic not found: \"{}\"", topicName);
-                            ctx.writeAndFlush(MessageProviderUtil
-                                    .getMessage("error.topic.not_found", topicName));
+                            messageService.sendMessageByKey(ctx,
+                                    "error.topic.not_found",
+                                    topicName);
                         }
                 );
     }
@@ -84,18 +85,20 @@ public class ViewUserCommand implements UserCommandHandler {
                                 .ifPresentOrElse(
                                         vote -> {
                                             log.info("Vote found: \"{}\"", voteName);
-                                            ctx.writeAndFlush(vote.toString());
+                                            messageService.sendMessage(ctx, vote.toString());
                                         },
                                         () -> {
                                             log.warn("Vote not found: \"{}\"", voteName);
-                                            ctx.writeAndFlush(MessageProviderUtil
-                                                    .getMessage("error.vote.not_found", voteName));
+                                            messageService.sendMessageByKey(ctx,
+                                                    "error.vote.not_found",
+                                                    voteName);
                                         }
                                 ),
                         () -> {
                             log.warn("Topic not found: \"{}\"", topicName);
-                            ctx.writeAndFlush(MessageProviderUtil
-                                    .getMessage("error.topic.not_found", topicName));
+                            messageService.sendMessageByKey(ctx,
+                                    "error.topic.not_found",
+                                    topicName);
                         }
                 );
     }
