@@ -12,10 +12,9 @@ import java.io.IOException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoadServerCommand implements ServerCommandHandler{
+public class LoadServerCommand implements ServerCommandHandler {
 
     private final FileHandler fileHandler;
-
     private final TopicRepository topicRepository;
 
     @Override

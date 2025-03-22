@@ -15,7 +15,6 @@ import java.io.IOException;
 public class SaveServerCommand implements ServerCommandHandler {
 
     private final FileHandler fileHandler;
-
     private final TopicRepository topicRepository;
 
     @Override
