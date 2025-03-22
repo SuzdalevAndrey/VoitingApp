@@ -1,7 +1,9 @@
 package ru.andreyszdlv;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -13,9 +15,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.andreyszdlv.config.ServerConfiguration;
+import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.props.ServerProperties;
-import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.service.command.server.ServerCommandService;
 import ru.andreyszdlv.service.command.user.UserCommandService;
 
@@ -27,9 +29,7 @@ import java.util.Scanner;
 public class Server {
 
     private final ServerCommandService serverCommandService;
-
     private final ServerProperties serverProperties;
-
     private final UserCommandService userCommandService;
 
     public static void main(String[] args) throws InterruptedException {
@@ -73,10 +73,10 @@ public class Server {
     }
 
     private void commandListener() {
-        try(Scanner scanner = new Scanner(System.in)) {
-            while(true){
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
                 String command = scanner.nextLine();
-                if(command.equals(ServerCommandType.EXIT.getName())){
+                if (command.equals(ServerCommandType.EXIT.getName())) {
                     log.info("Shutting down the server...");
                     break;
                 }
