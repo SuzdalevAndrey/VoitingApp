@@ -6,6 +6,7 @@ import ru.andreyszdlv.util.MessageProviderUtil;
 
 @Service
 public class MessageService {
+
     public void sendMessageByKey(ChannelHandlerContext ctx, String messageKey, Object... args) {
         ctx.writeAndFlush(MessageProviderUtil.getMessage(messageKey, args));
     }

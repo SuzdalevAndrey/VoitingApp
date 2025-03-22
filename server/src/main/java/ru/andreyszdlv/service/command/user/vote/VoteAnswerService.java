@@ -36,11 +36,13 @@ public class VoteAnswerService {
         try {
             option = parseVoteOption(answer);
         } catch (NumberFormatException e) {
+            log.warn("Invalid vote format: {}. Must be number.", answer);
             messageService.sendMessageByKey(ctx, "error.vote.option.invalid");
             return;
         }
 
         if (option <= 0) {
+            log.warn("Invalid vote option: {}. Option must be positive.", answer);
             messageService.sendMessageByKey(ctx, "error.vote.option.negative");
             return;
         }
@@ -48,6 +50,7 @@ public class VoteAnswerService {
         List<AnswerOption> answerOptions = vote.getAnswerOptions();
 
         if (option > answerOptions.size()) {
+            log.warn("Vote option {} out of range. Max allowed: {}", option, answerOptions.size());
             messageService.sendMessageByKey(ctx, "error.vote.option.invalid");
             return;
         }
@@ -56,6 +59,7 @@ public class VoteAnswerService {
         Set<String> votedUsers = answerOptions.get(option - 1).getVotedUsers();
 
         if (votedUsers.contains(userName)) {
+            log.warn("User \"{}\" already voted for option {}", userName, option);
             messageService.sendMessageByKey(ctx, "error.vote.option.already_choose");
             return;
         }

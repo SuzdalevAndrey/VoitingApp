@@ -23,8 +23,12 @@ public class Topic {
         return votes.size();
     }
 
-    public Optional<Vote> getVoteByName(String name) {
-        return Optional.ofNullable(votes.get(name));
+    public Optional<Vote> getVoteByName(String voteName) {
+        return Optional.ofNullable(votes.get(voteName));
+    }
+
+    public boolean containsVoteByName(String voteName) {
+        return votes.containsKey(voteName);
     }
 
     @Override
