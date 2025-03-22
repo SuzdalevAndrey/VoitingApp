@@ -6,8 +6,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.util.MessageProviderUtil;
+import ru.andreyszdlv.service.MessageService;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -16,6 +19,7 @@ import ru.andreyszdlv.util.MessageProviderUtil;
 public class VoteNameStep implements VoteStepStrategy {
 
     private final TopicRepository topicRepository;
+    private final MessageService messageService;
 
     @Setter
     private String topicName;
@@ -26,15 +30,17 @@ public class VoteNameStep implements VoteStepStrategy {
 
         log.info("Received vote name: '{}'", voteName);
 
-        if(voteName.isBlank()){
+        if (voteName.isBlank()) {
             log.warn("Vote name is empty.");
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.name.empty"));
+            messageService.sendMessageByKey(ctx, "error.vote.name.empty");
             return;
         }
 
-        if(topicRepository.containsVoteByTopicNameAndVoteName(topicName, voteName)){
+        Optional<Topic> topicOpt = topicRepository.findTopicByName(topicName);
+
+        if (topicOpt.isEmpty() || !topicOpt.get().containsVoteByName(voteName)) {
             log.warn("Vote \"{}\" already exists for topic \"{}\"", voteName, topicName);
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.already_exist", voteName));
+            messageService.sendMessageByKey(ctx, "error.vote.already_exist", voteName);
             return;
         }
 
@@ -42,6 +48,6 @@ public class VoteNameStep implements VoteStepStrategy {
         service.nextStep();
 
         log.info("Vote name set \"{}\".", voteName);
-        ctx.writeAndFlush(MessageProviderUtil.getMessage("vote.description"));
+        messageService.sendMessageByKey(ctx, "vote.description");
     }
 }

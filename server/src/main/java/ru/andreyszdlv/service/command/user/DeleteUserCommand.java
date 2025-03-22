@@ -40,7 +40,7 @@ public class DeleteUserCommand implements UserCommandHandler {
             return;
         }
 
-        String userName = userService.getUserNameByChannel(ctx.channel());
+        String userName = userService.findUserNameByChannel(ctx.channel());
         Vote vote = topicOpt.get().getVoteByName(voteName).get();
 
         if (!voteValidator.isUserAuthorOfVote(vote, userName)) {

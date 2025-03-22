@@ -11,7 +11,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public String getUserNameByChannel(Channel channel) {
+    public String findUserNameByChannel(Channel channel) {
         return userRepository.findUserByChannelId(channel.id().asLongText());
     }
 

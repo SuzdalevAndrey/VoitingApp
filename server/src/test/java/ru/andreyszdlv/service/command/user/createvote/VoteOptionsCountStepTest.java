@@ -23,7 +23,6 @@ class VoteOptionsCountStepTest {
 
     @BeforeEach
     void setUp() {
-        voteOptionsCountStep = new VoteOptionsCountStep();
     }
 
     @Test

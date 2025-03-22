@@ -29,18 +29,12 @@ public class InMemoryTopicRepository implements TopicRepository {
     }
 
     @Override
-    public void addVote(String topicName, Vote vote) {
+    public void saveVote(String topicName, Vote vote) {
         Topic topic = topics.get(topicName);
         if (topic == null) {
             throw new IllegalArgumentException("Топик \"" + topicName + "\" не найден");
         }
         topic.getVotes().put(vote.getName(), vote);
-    }
-
-    @Override
-    public boolean containsVoteByTopicNameAndVoteName(String topicName, String voteName) {
-        Topic topic = topics.get(topicName);
-        return topic != null && topic.getVotes().containsKey(voteName);
     }
 
     @Override

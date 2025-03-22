@@ -14,9 +14,7 @@ public interface TopicRepository {
 
     boolean containsTopicByName(String topicName);
 
-    void addVote(String topicName, Vote vote);
-
-    boolean containsVoteByTopicNameAndVoteName(String topicName, String voteName);
+    void saveVote(String topicName, Vote vote);
 
     Map<String, Topic> findAll();
 
