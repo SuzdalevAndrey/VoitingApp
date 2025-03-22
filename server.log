@@ -2254,3 +2254,256 @@ java.lang.NullPointerException: Cannot invoke "ru.andreyszdlv.model.Vote.getAnsw
 2025-03-22 15:08:19 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=topic]
 2025-03-22 15:08:19 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic: topic
 2025-03-22 15:08:19 INFO  r.a.s.command.user.ViewUserCommand - Topic found: "topic"
+2025-03-22 15:16:46 INFO  ru.andreyszdlv.Server - The server is running on port: 8080
+2025-03-22 15:16:51 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:16:51 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:16:51 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:16:51 INFO  r.a.s.command.user.LoginUserCommand - User "user" successfully logged
+2025-03-22 15:16:55 INFO  r.a.s.c.user.UserCommandService - Received command: create topic -n=topic
+2025-03-22 15:16:55 INFO  r.a.s.c.user.UserCommandService - Executing "create topic" command with parameters: [-n=topic]
+2025-03-22 15:16:55 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topic]
+2025-03-22 15:16:59 INFO  r.a.s.c.user.UserCommandService - Received command: create vote -t=topic
+2025-03-22 15:16:59 INFO  r.a.s.c.user.UserCommandService - Executing "create vote" command with parameters: [-t=topic]
+2025-03-22 15:16:59 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=topic]
+2025-03-22 15:16:59 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "topic"
+2025-03-22 15:17:11 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:17:11 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:17:11 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:17:11 WARN  r.a.s.command.user.LoginUserCommand - User 'user' already exists
+2025-03-22 15:21:12 INFO  ru.andreyszdlv.Server - The server is running on port: 8080
+2025-03-22 15:21:20 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:21:20 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:21:20 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:21:20 INFO  r.a.s.command.user.LoginUserCommand - User "user" successfully logged
+2025-03-22 15:21:24 INFO  r.a.s.c.user.UserCommandService - Received command: create topic -n=topic
+2025-03-22 15:21:24 INFO  r.a.s.c.user.UserCommandService - Executing "create topic" command with parameters: [-n=topic]
+2025-03-22 15:21:24 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topic]
+2025-03-22 15:21:30 INFO  r.a.s.c.user.UserCommandService - Received command: create vote -t=topic
+2025-03-22 15:21:30 INFO  r.a.s.c.user.UserCommandService - Executing "create vote" command with parameters: [-t=topic]
+2025-03-22 15:21:30 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=topic]
+2025-03-22 15:21:30 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "topic"
+2025-03-22 15:21:34 INFO  r.a.s.c.user.UserCommandService - Received command: exit
+2025-03-22 15:21:34 WARN  r.a.s.c.user.UserCommandService - Invalid command received: "exit"
+2025-03-22 15:23:04 INFO  r.a.s.c.user.UserCommandService - Received command: exit
+2025-03-22 15:23:04 WARN  r.a.s.c.user.UserCommandService - Invalid command received: "exit"
+2025-03-22 15:23:39 INFO  ru.andreyszdlv.Server - The server is running on port: 8080
+2025-03-22 15:23:49 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:23:49 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:23:49 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:23:49 INFO  r.a.s.command.user.LoginUserCommand - User "user" successfully logged
+2025-03-22 15:23:54 INFO  r.a.s.c.user.UserCommandService - Received command: create topic -n=topic
+2025-03-22 15:23:54 INFO  r.a.s.c.user.UserCommandService - Executing "create topic" command with parameters: [-n=topic]
+2025-03-22 15:23:54 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topic]
+2025-03-22 15:23:58 INFO  r.a.s.c.user.UserCommandService - Received command: create vote -t=topic
+2025-03-22 15:23:58 INFO  r.a.s.c.user.UserCommandService - Executing "create vote" command with parameters: [-t=topic]
+2025-03-22 15:23:58 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=topic]
+2025-03-22 15:23:58 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "topic"
+2025-03-22 15:24:03 INFO  r.a.s.c.user.UserCommandService - Received command: exit
+2025-03-22 15:24:03 INFO  r.a.s.c.user.UserCommandService - Executing "exit" command with parameters: []
+2025-03-22 15:24:03 INFO  r.a.s.command.user.ExitUserCommand - Executing exit command for user with channelID: 803049fffe0ddda9-000099ea-00000001-db1ff9e32d672603-f16f443e
+2025-03-22 15:24:03 INFO  r.a.s.command.user.ExitUserCommand - User with channelID "803049fffe0ddda9-000099ea-00000001-db1ff9e32d672603-f16f443e" and name "user" successfully removed
+2025-03-22 15:24:13 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:24:13 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:24:13 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:24:13 INFO  r.a.s.command.user.LoginUserCommand - User "user" successfully logged
+2025-03-22 15:24:19 INFO  r.a.s.c.user.UserCommandService - Received command: view
+2025-03-22 15:24:19 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: []
+2025-03-22 15:24:19 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: []
+2025-03-22 15:24:19 INFO  r.a.s.command.user.ViewUserCommand - Fetching all topics
+2025-03-22 15:24:29 INFO  r.a.s.c.user.UserCommandService - Received command: create vote -t=topic
+2025-03-22 15:24:29 INFO  r.a.s.c.user.UserCommandService - Executing "create vote" command with parameters: [-t=topic]
+2025-03-22 15:24:29 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=topic]
+2025-03-22 15:24:29 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "topic"
+2025-03-22 15:24:30 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 0 with message: vote
+2025-03-22 15:24:30 INFO  r.a.s.c.user.createvote.VoteNameStep - Received vote name: 'vote'
+2025-03-22 15:24:30 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 0
+2025-03-22 15:24:30 INFO  r.a.s.c.user.createvote.VoteNameStep - Vote name set "vote".
+2025-03-22 15:24:31 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 1 with message: t
+2025-03-22 15:24:31 INFO  r.a.s.c.u.c.VoteDescriptionStep - Setting vote description: "t"
+2025-03-22 15:24:31 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 1
+2025-03-22 15:24:32 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 2 with message: 2
+2025-03-22 15:24:32 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Received number of options: 2
+2025-03-22 15:24:32 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 2
+2025-03-22 15:24:32 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Count options set 2
+2025-03-22 15:24:32 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 1
+2025-03-22 15:24:32 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '1'
+2025-03-22 15:24:32 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "1"
+2025-03-22 15:24:32 INFO  r.a.s.c.u.createvote.VoteOptionsStep - More options needed. Requesting option #2
+2025-03-22 15:24:33 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 2
+2025-03-22 15:24:33 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '2'
+2025-03-22 15:24:33 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "2"
+2025-03-22 15:24:33 INFO  r.a.s.c.u.createvote.VoteOptionsStep - All options received. Completing vote creation
+2025-03-22 15:24:33 INFO  r.a.s.c.u.c.VoteCreationService - Completing vote creation for topic "topic" with vote name "vote"
+2025-03-22 15:24:33 INFO  r.a.s.c.u.c.VoteCreationService - Vote creation completed and pipeline handler updated.
+2025-03-22 15:24:38 INFO  r.a.s.c.user.UserCommandService - Received command: view -t=topic -v=vote
+2025-03-22 15:24:38 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: [-t=topic, -v=vote]
+2025-03-22 15:24:38 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=topic, -v=vote]
+2025-03-22 15:24:38 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "topic" find vote "vote"
+2025-03-22 15:24:38 INFO  r.a.s.command.user.ViewUserCommand - Vote found: "vote"
+2025-03-22 15:25:02 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user1
+2025-03-22 15:25:02 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user1]
+2025-03-22 15:25:02 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user1]
+2025-03-22 15:25:02 INFO  r.a.s.command.user.LoginUserCommand - User "user1" successfully logged
+2025-03-22 15:25:10 INFO  r.a.s.c.user.UserCommandService - Received command: create topic -n=topic
+2025-03-22 15:25:10 INFO  r.a.s.c.user.UserCommandService - Executing "create topic" command with parameters: [-n=topic]
+2025-03-22 15:25:10 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topic]
+2025-03-22 15:25:10 WARN  r.a.s.c.user.CreateTopicUserCommand - Topic "topic" already exists
+2025-03-22 15:25:19 INFO  r.a.s.c.user.UserCommandService - Received command: create vote -t=topic
+2025-03-22 15:25:19 INFO  r.a.s.c.user.UserCommandService - Executing "create vote" command with parameters: [-t=topic]
+2025-03-22 15:25:19 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=topic]
+2025-03-22 15:25:19 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "topic"
+2025-03-22 15:25:32 INFO  r.a.s.c.user.UserCommandService - Received command: create topic -n=topic
+2025-03-22 15:25:32 INFO  r.a.s.c.user.UserCommandService - Executing "create topic" command with parameters: [-n=topic]
+2025-03-22 15:25:32 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topic]
+2025-03-22 15:25:32 WARN  r.a.s.c.user.CreateTopicUserCommand - Topic "topic" already exists
+2025-03-22 15:25:37 INFO  r.a.s.c.user.UserCommandService - Received command: create vote -t=topic
+2025-03-22 15:25:37 INFO  r.a.s.c.user.UserCommandService - Executing "create vote" command with parameters: [-t=topic]
+2025-03-22 15:25:37 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=topic]
+2025-03-22 15:25:37 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "topic"
+2025-03-22 15:25:40 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 0 with message: vote
+2025-03-22 15:25:40 INFO  r.a.s.c.user.createvote.VoteNameStep - Received vote name: 'vote'
+2025-03-22 15:25:40 WARN  r.a.s.c.user.createvote.VoteNameStep - Vote "vote" already exists for topic "topic"
+2025-03-22 15:25:43 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 0 with message: vote1
+2025-03-22 15:25:43 INFO  r.a.s.c.user.createvote.VoteNameStep - Received vote name: 'vote1'
+2025-03-22 15:25:43 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 0
+2025-03-22 15:25:43 INFO  r.a.s.c.user.createvote.VoteNameStep - Vote name set "vote1".
+2025-03-22 15:25:47 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 0 with message: vote2
+2025-03-22 15:25:47 INFO  r.a.s.c.user.createvote.VoteNameStep - Received vote name: 'vote2'
+2025-03-22 15:25:47 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 0
+2025-03-22 15:25:47 INFO  r.a.s.c.user.createvote.VoteNameStep - Vote name set "vote2".
+2025-03-22 15:25:49 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 1 with message: te
+2025-03-22 15:25:49 INFO  r.a.s.c.u.c.VoteDescriptionStep - Setting vote description: "te"
+2025-03-22 15:25:49 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 1
+2025-03-22 15:25:52 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 2 with message: 2
+2025-03-22 15:25:52 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Received number of options: 2
+2025-03-22 15:25:52 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 2
+2025-03-22 15:25:52 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Count options set 2
+2025-03-22 15:25:52 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 1
+2025-03-22 15:25:52 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '1'
+2025-03-22 15:25:52 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "1"
+2025-03-22 15:25:52 INFO  r.a.s.c.u.createvote.VoteOptionsStep - More options needed. Requesting option #2
+2025-03-22 15:25:53 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 2
+2025-03-22 15:25:53 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '2'
+2025-03-22 15:25:53 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "2"
+2025-03-22 15:25:53 INFO  r.a.s.c.u.createvote.VoteOptionsStep - All options received. Completing vote creation
+2025-03-22 15:25:53 INFO  r.a.s.c.u.c.VoteCreationService - Completing vote creation for topic "topic" with vote name "vote1"
+2025-03-22 15:25:53 INFO  r.a.s.c.u.c.VoteCreationService - Vote creation completed and pipeline handler updated.
+2025-03-22 15:25:57 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 1 with message: te
+2025-03-22 15:25:57 INFO  r.a.s.c.u.c.VoteDescriptionStep - Setting vote description: "te"
+2025-03-22 15:25:57 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 1
+2025-03-22 15:25:58 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 2 with message: 2
+2025-03-22 15:25:58 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Received number of options: 2
+2025-03-22 15:25:58 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 2
+2025-03-22 15:25:58 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Count options set 2
+2025-03-22 15:25:58 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 1
+2025-03-22 15:25:58 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '1'
+2025-03-22 15:25:58 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "1"
+2025-03-22 15:25:58 INFO  r.a.s.c.u.createvote.VoteOptionsStep - More options needed. Requesting option #2
+2025-03-22 15:25:59 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 2
+2025-03-22 15:25:59 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '2'
+2025-03-22 15:25:59 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "2"
+2025-03-22 15:25:59 INFO  r.a.s.c.u.createvote.VoteOptionsStep - All options received. Completing vote creation
+2025-03-22 15:25:59 INFO  r.a.s.c.u.c.VoteCreationService - Completing vote creation for topic "topic" with vote name "vote2"
+2025-03-22 15:25:59 INFO  r.a.s.c.u.c.VoteCreationService - Vote creation completed and pipeline handler updated.
+2025-03-22 15:26:01 INFO  r.a.s.c.user.UserCommandService - Received command: view
+2025-03-22 15:26:01 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: []
+2025-03-22 15:26:01 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: []
+2025-03-22 15:26:01 INFO  r.a.s.command.user.ViewUserCommand - Fetching all topics
+2025-03-22 15:26:04 INFO  r.a.s.c.user.UserCommandService - Received command: view -t=topic
+2025-03-22 15:26:04 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: [-t=topic]
+2025-03-22 15:26:04 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=topic]
+2025-03-22 15:26:04 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic: topic
+2025-03-22 15:26:04 INFO  r.a.s.command.user.ViewUserCommand - Topic found: "topic"
+2025-03-22 15:26:11 INFO  r.a.s.c.user.UserCommandService - Received command: view -t=topic -v=vote2
+2025-03-22 15:26:11 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: [-t=topic, -v=vote2]
+2025-03-22 15:26:11 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=topic, -v=vote2]
+2025-03-22 15:26:11 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "topic" find vote "vote2"
+2025-03-22 15:26:11 INFO  r.a.s.command.user.ViewUserCommand - Vote found: "vote2"
+2025-03-22 15:27:22 INFO  r.a.s.c.user.UserCommandService - Received command: vote -t=topic -v=vote1
+2025-03-22 15:27:22 INFO  r.a.s.c.user.UserCommandService - Executing "vote" command with parameters: [-t=topic, -v=vote1]
+2025-03-22 15:27:22 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=topic, -v=vote1]
+2025-03-22 15:27:22 INFO  r.a.s.c.user.vote.VoteUserCommand - Sending vote options to user and switching to VoteAnswerHandler
+2025-03-22 15:27:35 INFO  r.a.s.c.user.UserCommandService - Received command: vote -t=topic -v=vote1
+2025-03-22 15:27:35 INFO  r.a.s.c.user.UserCommandService - Executing "vote" command with parameters: [-t=topic, -v=vote1]
+2025-03-22 15:27:35 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=topic, -v=vote1]
+2025-03-22 15:27:35 INFO  r.a.s.c.user.vote.VoteUserCommand - Sending vote options to user and switching to VoteAnswerHandler
+2025-03-22 15:27:40 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: 1
+2025-03-22 15:27:40 INFO  r.a.s.c.user.vote.VoteAnswerService - User "user" successfully voted for option 1
+2025-03-22 15:27:40 INFO  r.a.s.c.user.vote.VoteAnswerService - Switching pipeline handler to CommandHandler after vote
+2025-03-22 15:27:41 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: 2
+2025-03-22 15:27:41 INFO  r.a.s.c.user.vote.VoteAnswerService - User "user1" successfully voted for option 2
+2025-03-22 15:27:41 INFO  r.a.s.c.user.vote.VoteAnswerService - Switching pipeline handler to CommandHandler after vote
+2025-03-22 15:27:46 INFO  r.a.s.c.user.UserCommandService - Received command: view -t=topic
+2025-03-22 15:27:46 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: [-t=topic]
+2025-03-22 15:27:46 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=topic]
+2025-03-22 15:27:46 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic: topic
+2025-03-22 15:27:46 INFO  r.a.s.command.user.ViewUserCommand - Topic found: "topic"
+2025-03-22 15:27:59 INFO  r.a.s.c.user.UserCommandService - Received command: view -t=topic -v=vote1
+2025-03-22 15:27:59 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: [-t=topic, -v=vote1]
+2025-03-22 15:27:59 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=topic, -v=vote1]
+2025-03-22 15:27:59 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "topic" find vote "vote1"
+2025-03-22 15:27:59 INFO  r.a.s.command.user.ViewUserCommand - Vote found: "vote1"
+2025-03-22 15:28:11 INFO  r.a.s.c.user.UserCommandService - Received command: view -t=topic -v=vote1
+2025-03-22 15:28:11 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: [-t=topic, -v=vote1]
+2025-03-22 15:28:11 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=topic, -v=vote1]
+2025-03-22 15:28:11 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "topic" find vote "vote1"
+2025-03-22 15:28:11 INFO  r.a.s.command.user.ViewUserCommand - Vote found: "vote1"
+2025-03-22 15:29:37 INFO  ru.andreyszdlv.Server - The server is running on port: 8080
+2025-03-22 15:29:47 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:29:47 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:29:47 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:29:47 INFO  r.a.s.command.user.LoginUserCommand - User "user" successfully logged
+2025-03-22 15:29:50 INFO  r.a.s.c.user.UserCommandService - Received command: view
+2025-03-22 15:29:50 INFO  r.a.s.c.user.UserCommandService - Executing "view" command with parameters: []
+2025-03-22 15:29:50 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: []
+2025-03-22 15:29:50 INFO  r.a.s.command.user.ViewUserCommand - Fetching all topics
+2025-03-22 15:29:55 INFO  r.a.s.c.user.UserCommandService - Received command: vieeeww
+2025-03-22 15:29:55 WARN  r.a.s.c.user.UserCommandService - Invalid command received: "vieeeww"
+2025-03-22 15:29:57 INFO  r.a.s.c.user.UserCommandService - Received command: exit
+2025-03-22 15:29:57 INFO  r.a.s.c.user.UserCommandService - Executing "exit" command with parameters: []
+2025-03-22 15:29:57 INFO  r.a.s.command.user.ExitUserCommand - Executing exit command for user with channelID: 803049fffe0ddda9-00009b7b-00000001-42c338ca677c8ce8-52f71384
+2025-03-22 15:29:57 INFO  r.a.s.command.user.ExitUserCommand - User with channelID "803049fffe0ddda9-00009b7b-00000001-42c338ca677c8ce8-52f71384" and name "user" successfully removed
+2025-03-22 15:30:13 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:30:13 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:30:13 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:30:13 INFO  r.a.s.command.user.LoginUserCommand - User "user" successfully logged
+2025-03-22 15:30:18 INFO  r.a.s.c.user.UserCommandService - Received command: create topic -n=topic
+2025-03-22 15:30:18 INFO  r.a.s.c.user.UserCommandService - Executing "create topic" command with parameters: [-n=topic]
+2025-03-22 15:30:18 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topic]
+2025-03-22 15:30:21 INFO  r.a.s.c.user.UserCommandService - Received command: create vote -t=topic
+2025-03-22 15:30:21 INFO  r.a.s.c.user.UserCommandService - Executing "create vote" command with parameters: [-t=topic]
+2025-03-22 15:30:21 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=topic]
+2025-03-22 15:30:21 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "topic"
+2025-03-22 15:30:23 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 0 with message: vote
+2025-03-22 15:30:23 INFO  r.a.s.c.user.createvote.VoteNameStep - Received vote name: 'vote'
+2025-03-22 15:30:23 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 0
+2025-03-22 15:30:23 INFO  r.a.s.c.user.createvote.VoteNameStep - Vote name set "vote".
+2025-03-22 15:30:24 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 1 with message: t
+2025-03-22 15:30:24 INFO  r.a.s.c.u.c.VoteDescriptionStep - Setting vote description: "t"
+2025-03-22 15:30:24 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 1
+2025-03-22 15:30:25 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 2 with message: 2
+2025-03-22 15:30:25 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Received number of options: 2
+2025-03-22 15:30:25 INFO  r.a.s.c.u.c.VoteCreationService - Moving to next step from step 2
+2025-03-22 15:30:25 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Count options set 2
+2025-03-22 15:30:26 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 1
+2025-03-22 15:30:26 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '1'
+2025-03-22 15:30:26 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "1"
+2025-03-22 15:30:26 INFO  r.a.s.c.u.createvote.VoteOptionsStep - More options needed. Requesting option #2
+2025-03-22 15:30:26 INFO  r.a.s.c.u.c.VoteCreationService - Processing input for vote creation: step 3 with message: 2
+2025-03-22 15:30:26 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: '2'
+2025-03-22 15:30:26 INFO  r.a.s.c.u.c.VoteCreationService - Adding new option: "2"
+2025-03-22 15:30:26 INFO  r.a.s.c.u.createvote.VoteOptionsStep - All options received. Completing vote creation
+2025-03-22 15:30:26 INFO  r.a.s.c.u.c.VoteCreationService - Completing vote creation for topic "topic" with vote name "vote"
+2025-03-22 15:30:26 INFO  r.a.s.c.u.c.VoteCreationService - Vote creation completed and pipeline handler updated.
+2025-03-22 15:30:32 INFO  r.a.s.c.user.UserCommandService - Received command: vote -t=topic -v=vote
+2025-03-22 15:30:32 INFO  r.a.s.c.user.UserCommandService - Executing "vote" command with parameters: [-t=topic, -v=vote]
+2025-03-22 15:30:32 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=topic, -v=vote]
+2025-03-22 15:30:32 INFO  r.a.s.c.user.vote.VoteUserCommand - Sending vote options to user and switching to VoteAnswerHandler
+2025-03-22 15:30:40 INFO  r.a.s.c.user.UserCommandService - Received command: exit
+2025-03-22 15:30:40 INFO  r.a.s.c.user.UserCommandService - Executing "exit" command with parameters: []
+2025-03-22 15:30:40 INFO  r.a.s.command.user.ExitUserCommand - Executing exit command for user with channelID: 803049fffe0ddda9-00009b7b-00000002-02025a1b7b7d0a29-cbb0a14f
+2025-03-22 15:30:40 INFO  r.a.s.command.user.ExitUserCommand - User with channelID "803049fffe0ddda9-00009b7b-00000002-02025a1b7b7d0a29-cbb0a14f" and name "user" successfully removed
+2025-03-22 15:30:55 INFO  r.a.s.c.user.UserCommandService - Received command: login -u=user
+2025-03-22 15:30:55 INFO  r.a.s.c.user.UserCommandService - Executing "login" command with parameters: [-u=user]
+2025-03-22 15:30:55 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-22 15:30:55 INFO  r.a.s.command.user.LoginUserCommand - User "user" successfully logged

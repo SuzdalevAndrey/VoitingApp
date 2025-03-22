@@ -29,8 +29,6 @@ public class VoteAnswerService {
     private Vote vote;
 
     public void answer(ChannelHandlerContext ctx, String answer) {
-        //todo исправить баг с тем, что во время голосования пользователь может выйти из системы,
-        // но на сервере он останется и будет нельзя зайти под тем же именем
         log.info("Processing vote answer: {}", answer);
         int option;
         try {

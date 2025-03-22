@@ -28,12 +28,12 @@ public class HandlerFactory {
     public VoteAnswerHandler createVoteAnswerHandler(Vote vote) {
         VoteAnswerService service = voteAnswerService.getIfAvailable();
         service.setVote(vote);
-        return new VoteAnswerHandler(service);
+        return new VoteAnswerHandler(service, userCommandService.getIfAvailable());
     }
 
     public VoteDescriptionHandler createVoteDescriptionHandler(String topicName) {
         VoteCreationService service = voteCreationService.getIfAvailable();
         service.setTopicName(topicName);
-        return new VoteDescriptionHandler(service);
+        return new VoteDescriptionHandler(service, userCommandService.getIfAvailable());
     }
 }
