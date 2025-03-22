@@ -2,17 +2,23 @@ package ru.andreyszdlv.service.command.user.createvote;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Service;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.util.MessageProviderUtil;
 
 @Slf4j
+@Service
+@Order(0)
 @RequiredArgsConstructor
 public class VoteNameStep implements VoteStepStrategy {
 
     private final TopicRepository topicRepository;
 
-    private final String topicName;
+    @Setter
+    private String topicName;
 
     @Override
     public void execute(ChannelHandlerContext ctx, String message, VoteCreationService service) {
@@ -26,7 +32,7 @@ public class VoteNameStep implements VoteStepStrategy {
             return;
         }
 
-        if(topicRepository.containsVoteByName(topicName, voteName)){
+        if(topicRepository.containsVoteByTopicNameAndVoteName(topicName, voteName)){
             log.warn("Vote \"{}\" already exists for topic \"{}\"", voteName, topicName);
             ctx.writeAndFlush(MessageProviderUtil.getMessage("error.vote.already_exist", voteName));
             return;

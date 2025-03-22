@@ -1,0 +1,91 @@
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=TopicName, -v=VoteName]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "TopicName" find vote "VoteName"
+2025-03-21 13:42:31 WARN  r.a.s.command.user.ViewUserCommand - Vote not found: "VoteName"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=TopicName, -v=VoteName]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "TopicName" find vote "VoteName"
+2025-03-21 13:42:31 WARN  r.a.s.command.user.ViewUserCommand - Topic not found: "TopicName"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: []
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching all topics
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=TopicName]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic: TopicName
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Topic found: "TopicName"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=TopicName, -v=VoteName]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "TopicName" find vote "VoteName"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Vote found: "VoteName"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=TopicName]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic: TopicName
+2025-03-21 13:42:31 WARN  r.a.s.command.user.ViewUserCommand - Topic not found: "TopicName"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=Topic, -v=  ]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "Topic" find vote "  "
+2025-03-21 13:42:31 WARN  r.a.s.command.user.ViewUserCommand - Topic not found: "Topic"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=Topic, -invalid=Vote]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic "Topic" find vote "null"
+2025-03-21 13:42:31 WARN  r.a.s.command.user.ViewUserCommand - Topic not found: "Topic"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-t=  ]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic:   
+2025-03-21 13:42:31 WARN  r.a.s.command.user.ViewUserCommand - Topic not found: "  "
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: []
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching all topics
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Executing view command with parameters: [-invalid=Name]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.ViewUserCommand - Fetching topic: null
+2025-03-21 13:42:31 WARN  r.a.s.command.user.ViewUserCommand - Topic not found: "null"
+2025-03-21 13:42:31 INFO  r.a.s.command.user.DeleteUserCommand - Executing delete command with params: [-t=topicName, -v=voteName]
+2025-03-21 13:42:31 WARN  r.a.s.command.user.DeleteUserCommand - Topic "topicName" or vote "voteName" not found
+2025-03-21 13:42:31 INFO  r.a.s.command.user.DeleteUserCommand - Executing delete command with params: [-t=TopicName -v=VoteName -thirdParam=invalid]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.DeleteUserCommand - Executing delete command with params: [-t=topicName, -v=voteName]
+2025-03-21 13:42:31 WARN  r.a.s.command.user.DeleteUserCommand - Topic "topicName" or vote "voteName" not found
+2025-03-21 13:42:31 INFO  r.a.s.command.user.DeleteUserCommand - Executing delete command with params: [-t=topicName, -v=voteName]
+2025-03-21 13:42:31 WARN  r.a.s.command.user.DeleteUserCommand - Topic "topicName" or vote "voteName" not found
+2025-03-21 13:42:31 INFO  r.a.s.command.user.DeleteUserCommand - Executing delete command with params: [-t=TopicName, -v=VoteName]
+2025-03-21 13:42:31 WARN  r.a.s.command.user.DeleteUserCommand - Topic "TopicName" or vote "VoteName" not found
+2025-03-21 13:42:31 INFO  r.a.s.command.user.DeleteUserCommand - Executing delete command with params: [-t=  , -v= ]
+2025-03-21 13:42:31 WARN  r.a.s.command.user.DeleteUserCommand - Topic "  " or vote " " not found
+2025-03-21 13:42:31 INFO  r.a.s.command.user.DeleteUserCommand - Executing delete command with params: [-invalid=TopicName, -v=VoteName]
+2025-03-21 13:42:31 WARN  r.a.s.command.user.DeleteUserCommand - Topic "null" or vote "VoteName" not found
+2025-03-21 13:42:31 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=user]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=use, -two=param]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-invalid=Name]
+2025-03-21 13:42:31 INFO  r.a.s.command.user.LoginUserCommand - Executing login command with params: [-u=]
+2025-03-21 13:42:31 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: []
+2025-03-21 13:42:31 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topicName]
+2025-03-21 13:42:31 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-invalid=Name]
+2025-03-21 13:42:31 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=  ]
+2025-03-21 13:42:31 INFO  r.a.s.c.user.CreateTopicUserCommand - Executing create topic command with params: [-n=topicName]
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: 1
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: -1
+2025-03-21 13:42:31 WARN  r.a.s.c.user.vote.VoteAnswerService - Invalid vote option: -1. Option must be positive.
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: one
+2025-03-21 13:42:31 WARN  r.a.s.c.user.vote.VoteAnswerService - Invalid vote format: one. Must be number.
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: 0
+2025-03-21 13:42:31 WARN  r.a.s.c.user.vote.VoteAnswerService - Invalid vote option: 0. Option must be positive.
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: 1
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteAnswerService - Processing vote answer: 2
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=topic]
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=TopicName, -v=VoteName]
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteUserCommand - Sending vote options to user and switching to VoteAnswerHandler
+2025-03-21 13:42:31 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-invalid=topic, vote]
+2025-03-21 13:42:32 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=TopicName, -v=VoteName]
+2025-03-21 13:42:32 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=TopicName, -v=VoteName]
+2025-03-21 13:42:32 INFO  r.a.s.c.user.vote.VoteUserCommand - Executing vote command with params: [-t=, -v=vote]
+2025-03-21 13:42:32 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: 'Вариант 1'
+2025-03-21 13:42:32 INFO  r.a.s.c.u.createvote.VoteOptionsStep - All options received. Completing vote creation
+2025-03-21 13:42:32 INFO  r.a.s.c.u.createvote.VoteOptionsStep - Received vote option: 'Вариант 1'
+2025-03-21 13:42:32 INFO  r.a.s.c.u.createvote.VoteOptionsStep - More options needed. Requesting option #2
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: []
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=TopicName]
+2025-03-21 13:42:32 WARN  r.a.s.c.u.c.CreateVoteUserCommand - Topic "TopicName" not found
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-invalid=TopicName]
+2025-03-21 13:42:32 WARN  r.a.s.c.u.c.CreateVoteUserCommand - Topic "null" not found
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=  ]
+2025-03-21 13:42:32 WARN  r.a.s.c.u.c.CreateVoteUserCommand - Topic "  " not found
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Executing create vote command with params: [-t=TopicName]
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.CreateVoteUserCommand - Vote creation process started for topic "TopicName"
+2025-03-21 13:42:32 WARN  r.a.s.c.u.c.VoteOptionsCountStep - Invalid count option format: one. Must be number.
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Received number of options: -1
+2025-03-21 13:42:32 WARN  r.a.s.c.u.c.VoteOptionsCountStep - Invalid count option: -1. Count option must be positive.
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Received number of options: 5
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Count options set 5
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.VoteOptionsCountStep - Received number of options: 0
+2025-03-21 13:42:32 WARN  r.a.s.c.u.c.VoteOptionsCountStep - Invalid count option: 0. Count option must be positive.
+2025-03-21 13:42:32 INFO  r.a.s.c.u.c.VoteDescriptionStep - Setting vote description: "Description"

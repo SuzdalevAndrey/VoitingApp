@@ -1,8 +1,11 @@
 package ru.andreyszdlv.repo;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Repository
 public class InMemoryUserRepository implements UserRepository {
 
     private static final Map<String, String> users = new ConcurrentHashMap<>();

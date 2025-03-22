@@ -2,12 +2,15 @@ package ru.andreyszdlv.service.command.server;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.service.file.FileHandler;
 
 import java.io.IOException;
 
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class SaveServerCommand implements ServerCommandHandler {
 
@@ -26,5 +29,10 @@ public class SaveServerCommand implements ServerCommandHandler {
         } catch (IOException e) {
             log.error("Error save topics to file: \"{}\". Exception: {}", paramCommand, e.getMessage());
         }
+    }
+
+    @Override
+    public ServerCommandType getType() {
+        return ServerCommandType.SAVE;
     }
 }

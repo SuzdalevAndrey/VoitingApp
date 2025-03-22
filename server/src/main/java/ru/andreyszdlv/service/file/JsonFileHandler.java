@@ -1,13 +1,16 @@
 package ru.andreyszdlv.service.file;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.andreyszdlv.model.Topic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+@Component
 @RequiredArgsConstructor
 public class JsonFileHandler implements FileHandler {
 

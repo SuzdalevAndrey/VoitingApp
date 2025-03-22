@@ -29,7 +29,7 @@ class VoteNameStepTest {
 
     @BeforeEach
     void setUp() {
-        voteNameStep = new VoteNameStep(topicRepository, topicName);
+//        voteNameStep = new VoteNameStep(topicRepository, topicName);
     }
 
     @Test
@@ -47,7 +47,7 @@ class VoteNameStepTest {
     @Test
     void execute_SendErrorMessage_WhenVoteAlreadyExists() {
         String voteName = "VoteName";
-        when(topicRepository.containsVoteByName(topicName, voteName)).thenReturn(true);
+        when(topicRepository.containsVoteByTopicNameAndVoteName(topicName, voteName)).thenReturn(true);
 
         voteNameStep.execute(ctx, voteName, voteCreationService);
 
@@ -61,7 +61,7 @@ class VoteNameStepTest {
     void execute_SetVoteNameAndProceedToNextStep_WhenVoteNameValid() {
         String voteName = "newVote";
         String message = "   " + voteName;
-        when(topicRepository.containsVoteByName(topicName, voteName)).thenReturn(false);
+        when(topicRepository.containsVoteByTopicNameAndVoteName(topicName, voteName)).thenReturn(false);
 
         voteNameStep.execute(ctx, message, voteCreationService);
 

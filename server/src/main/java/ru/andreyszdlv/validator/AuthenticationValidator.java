@@ -2,8 +2,10 @@ package ru.andreyszdlv.validator;
 
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.andreyszdlv.repo.UserRepository;
 
+@Component
 @RequiredArgsConstructor
 public class AuthenticationValidator {
 

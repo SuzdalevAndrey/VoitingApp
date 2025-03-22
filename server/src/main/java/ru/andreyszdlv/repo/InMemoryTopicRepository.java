@@ -1,5 +1,6 @@
 package ru.andreyszdlv.repo;
 
+import org.springframework.stereotype.Repository;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Repository
 public class InMemoryTopicRepository implements TopicRepository {
 
     private static final Map<String, Topic> topics = new ConcurrentHashMap<>();
@@ -36,7 +38,7 @@ public class InMemoryTopicRepository implements TopicRepository {
     }
 
     @Override
-    public boolean containsVoteByName(String topicName, String voteName) {
+    public boolean containsVoteByTopicNameAndVoteName(String topicName, String voteName) {
         Topic topic = topics.get(topicName);
         return topic != null && topic.getVotes().containsKey(voteName);
     }

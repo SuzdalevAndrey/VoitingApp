@@ -1,27 +1,35 @@
 package ru.andreyszdlv.service.command.user.createvote;
 
 import io.netty.channel.ChannelHandlerContext;
-import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import ru.andreyszdlv.factory.RepositoryFactory;
-import ru.andreyszdlv.handler.CommandHandler;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import ru.andreyszdlv.factory.HandlerFactory;
 import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.repo.UserRepository;
-import ru.andreyszdlv.service.command.user.UserCommandService;
 import ru.andreyszdlv.util.MessageProviderUtil;
-import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Setter
+@Service
+@Scope("prototype")
 public class VoteCreationService {
 
-    private final String topicName;
+    private final TopicRepository topicRepository;
+
+    private final UserRepository userRepository;
+
+    private final List<VoteStepStrategy> stepHandlers;
+
+    private final HandlerFactory handlerFactory;
+
+    private String topicName;
 
     private String voteName;
 
@@ -31,30 +39,26 @@ public class VoteCreationService {
 
     private final List<AnswerOption> options = new ArrayList<>();
 
-    @Setter(AccessLevel.NONE)
     private int step = 0;
 
-    private final TopicRepository topicRepository;
-    private final UserRepository userRepository;
-
-    private final List<VoteStepStrategy> stepHandlers;
-
-    public VoteCreationService(String topicName,
-                               TopicRepository topicRepository,
-                               UserRepository userRepository) {
-        this.topicName = topicName;
-        stepHandlers = List.of(
-                new VoteNameStep(topicRepository, topicName),
-                new VoteDescriptionStep(),
-                new VoteOptionsCountStep(),
-                new VoteOptionsStep()
-        );
+    public VoteCreationService(TopicRepository topicRepository,
+                               UserRepository userRepository,
+                               List<VoteStepStrategy> stepHandlers,
+                               HandlerFactory handlerFactory) {
         this.topicRepository = topicRepository;
         this.userRepository = userRepository;
+        this.stepHandlers = stepHandlers;
+        this.handlerFactory = handlerFactory;
     }
 
-    public void processInput(ChannelHandlerContext ctx, String message){
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+        ((VoteNameStep) this.stepHandlers.get(0)).setTopicName(topicName);
+    }
+
+    public void processInput(ChannelHandlerContext ctx, String message) {
         log.info("Processing input for vote creation: step {} with message: {}", step, message);
+
         stepHandlers.get(step).execute(ctx, message, this);
     }
 
@@ -72,11 +76,11 @@ public class VoteCreationService {
         return options.size();
     }
 
-    public boolean isMoreOptionsNeeded(){
+    public boolean isMoreOptionsNeeded() {
         return getOptionsCount() < numberOfOptions;
     }
 
-    public void completeVote(ChannelHandlerContext ctx){
+    public void completeVote(ChannelHandlerContext ctx) {
         log.info("Completing vote creation for topic \"{}\" with vote name \"{}\"",
                 topicName,
                 voteName);
@@ -92,7 +96,7 @@ public class VoteCreationService {
         );
         ctx.writeAndFlush(MessageProviderUtil.getMessage("create_vote.success", voteName, topicName));
         ctx.pipeline().remove(ctx.handler());
-        ctx.pipeline().addLast(new CommandHandler(new UserCommandService(new AuthenticationValidator(RepositoryFactory.getUserRepository()))));
+        ctx.pipeline().addLast(handlerFactory.createCommandHandler());
         log.info("Vote creation completed and pipeline handler updated.");
     }
 }

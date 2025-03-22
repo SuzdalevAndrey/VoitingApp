@@ -1,56 +1,43 @@
 package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import ru.andreyszdlv.enums.UserCommandType;
-import ru.andreyszdlv.factory.RepositoryFactory;
-import ru.andreyszdlv.service.command.user.createvote.CreateVoteUserCommand;
-import ru.andreyszdlv.service.command.user.vote.VoteUserCommand;
 import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.validator.AuthenticationValidator;
+import ru.andreyszdlv.validator.CommandValidator;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class UserCommandService {
 
-    private final Map<UserCommandType, UserCommandHandler> commands = new HashMap<>();
+    private final List<UserCommandHandler> commands;
 
     private final AuthenticationValidator authenticationValidator;
 
-    public UserCommandService(AuthenticationValidator authenticationValidator) {
-        commands.put(UserCommandType.LOGIN, new LoginUserCommand(RepositoryFactory.getUserRepository()));
-        commands.put(UserCommandType.EXIT, new ExitUserCommand(RepositoryFactory.getUserRepository()));
-        commands.put(UserCommandType.CREATE_TOPIC,
-                new CreateTopicUserCommand(RepositoryFactory.getTopicRepository()));
-        commands.put(UserCommandType.CREATE_VOTE, new CreateVoteUserCommand(RepositoryFactory.getTopicRepository()));
-        commands.put(UserCommandType.VIEW, new ViewUserCommand(RepositoryFactory.getTopicRepository()));
-        commands.put(UserCommandType.VOTE, new VoteUserCommand(RepositoryFactory.getTopicRepository()));
-        commands.put(UserCommandType.DELETE,
-                new DeleteUserCommand(RepositoryFactory.getTopicRepository(), RepositoryFactory.getUserRepository()));
-        this.authenticationValidator = authenticationValidator;
-    }
+    private final CommandValidator commandValidator;
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
         String trimmedCommand = fullCommand.trim();
         log.info("Received command: {}", trimmedCommand);
 
-        UserCommandType command = Arrays.stream(UserCommandType.values())
-                .filter(cmd -> trimmedCommand.startsWith(cmd.getName()))
-                .findFirst()
-                .orElse(null);
-
-        if (command == null) {
-            log.warn("Unknown command received: \"{}\"", trimmedCommand);
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.unknown_command", trimmedCommand));
+        if(!commandValidator.validate(trimmedCommand)) {
+            log.warn("Invalid command received: \"{}\"", trimmedCommand);
+            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.invalid_command", trimmedCommand));
             return;
         }
 
-        log.info("Detected command: {}", command.getName());
+        UserCommandHandler command = commands.stream()
+                .filter(c -> trimmedCommand.startsWith(c.getType().getName()))
+                .findFirst()
+                .get();
 
-        if(!command.equals(UserCommandType.LOGIN)
+        if (!(command.getType() == UserCommandType.LOGIN)
                 && !authenticationValidator.isAuthenticated(ctx.channel())) {
             log.warn("Unauthorized access \"{}\" command by channelID \"{}\"",
                     command, ctx.channel().id().asLongText());
@@ -58,15 +45,10 @@ public class UserCommandService {
             return;
         }
 
-        String paramsPart = trimmedCommand.substring(command.getName().length()).trim();
+        String paramsPart = trimmedCommand.substring(command.getType().getName().length()).trim();
         String[] params = paramsPart.isEmpty() ? new String[0] : paramsPart.split("\\s+");
 
-        log.info("Executing \"{}\" command with parameters: {}", command.getName(), params);
-        commands.getOrDefault(command,
-                (c, p) -> {
-                    log.error("Command \"{}\" not registered in system", command);
-                    ctx.writeAndFlush(MessageProviderUtil
-                            .getMessage("error.unknown_command", trimmedCommand));
-        }).execute(ctx, params);
+        log.info("Executing \"{}\" command with parameters: {}", command.getType().getName(), params);
+        command.execute(ctx, params);
     }
 }

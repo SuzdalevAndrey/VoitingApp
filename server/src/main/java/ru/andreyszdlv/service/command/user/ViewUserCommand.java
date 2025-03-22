@@ -3,11 +3,14 @@ package ru.andreyszdlv.service.command.user;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import ru.andreyszdlv.enums.UserCommandType;
 import ru.andreyszdlv.repo.TopicRepository;
 import ru.andreyszdlv.util.MessageProviderUtil;
-import ru.andreyszdlv.util.ParameterUtil;
+import ru.andreyszdlv.util.ParamUtil;
 
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class ViewUserCommand implements UserCommandHandler {
 
@@ -17,7 +20,7 @@ public class ViewUserCommand implements UserCommandHandler {
     public void execute(ChannelHandlerContext ctx, String[] paramsCommand) {
         log.info("Executing view command with parameters: {}", (Object) paramsCommand);
 
-        switch(paramsCommand.length){
+        switch (paramsCommand.length) {
             case 0 -> handleNoParams(ctx);
             case 1 -> handleSingleParam(ctx, paramsCommand);
             case 2 -> handleTwoParams(ctx, paramsCommand);
@@ -28,34 +31,31 @@ public class ViewUserCommand implements UserCommandHandler {
         }
     }
 
-    private void handleNoParams(ChannelHandlerContext ctx){
-        log.info("Fetching all topics");
-        topicRepository.findAll().forEach(
-                (name, topic) -> ctx.writeAndFlush(String.format(
-                        "\"%s\" (votes in topic=%s)\n",
-                        name,
-                        topic.countVotes())
-                )
-        );
+    @Override
+    public UserCommandType getType() {
+        return UserCommandType.VIEW;
     }
 
-    private void handleSingleParam(ChannelHandlerContext ctx, String[] paramsCommand){
+    private void handleNoParams(ChannelHandlerContext ctx) {
+        log.info("Fetching all topics");
+        StringBuilder response = new StringBuilder();
 
-        String topicName = ParameterUtil.extractValueByPrefix(paramsCommand[0], "-t=");
+        topicRepository.findAll().forEach((name, topic) ->
+                response.append(String.format("\"%s\" (votes in topic=%d)\n", name, topic.countVotes()))
+        );
 
-        if(topicName == null){
-            log.warn("View command options invalid. Expected: -t=TopicName. Received {}.",
-                    (Object) paramsCommand);
-            ctx.writeAndFlush(MessageProviderUtil
-                    .getMessage("error.command.view.single_param.invalid"));
+        if (response.length() > 0) {
+            response.setLength(response.length() - System.lineSeparator().length());
+            ctx.writeAndFlush(response.toString());
             return;
         }
 
-        if(topicName.isBlank()){
-            log.warn("Topic name is empty");
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.empty"));
-            return;
-        }
+        ctx.writeAndFlush(MessageProviderUtil.getMessage("view.topics.not_found"));
+    }
+
+    private void handleSingleParam(ChannelHandlerContext ctx, String[] paramsCommand) {
+
+        String topicName = ParamUtil.extractValueByPrefix(paramsCommand[0], "-t=");
 
         log.info("Fetching topic: {}", topicName);
         topicRepository.findTopicByName(topicName)
@@ -72,23 +72,10 @@ public class ViewUserCommand implements UserCommandHandler {
                 );
     }
 
-    private void handleTwoParams(ChannelHandlerContext ctx, String[] paramsCommand){
+    private void handleTwoParams(ChannelHandlerContext ctx, String[] paramsCommand) {
 
-        String topicName = ParameterUtil.extractValueByPrefix(paramsCommand[0], "-t=");
-        String voteName = ParameterUtil.extractValueByPrefix(paramsCommand[1], "-v=");
-
-        if(topicName == null || voteName == null){
-            log.warn("View command options invalid. Expected: -t=TopicName -v=VoteName. Received {}.",
-                    (Object) paramsCommand);
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.command.view.two_params.invalid"));
-            return;
-        }
-
-        if(topicName.isBlank() || voteName.isBlank()){
-            log.warn("Topic name or vote name is empty");
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.vote.name.empty"));
-            return;
-        }
+        String topicName = ParamUtil.extractValueByPrefix(paramsCommand[0], "-t=");
+        String voteName = ParamUtil.extractValueByPrefix(paramsCommand[1], "-v=");
 
         log.info("Fetching topic \"{}\" find vote \"{}\"", topicName, voteName);
         topicRepository.findTopicByName(topicName)

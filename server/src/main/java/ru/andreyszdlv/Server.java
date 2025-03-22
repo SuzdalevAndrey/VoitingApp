@@ -7,30 +7,36 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 import ru.andreyszdlv.config.ServerConfiguration;
-import ru.andreyszdlv.enums.ServerCommandType;
-import ru.andreyszdlv.factory.RepositoryFactory;
 import ru.andreyszdlv.handler.CommandHandler;
+import ru.andreyszdlv.props.ServerProperties;
+import ru.andreyszdlv.enums.ServerCommandType;
 import ru.andreyszdlv.service.command.server.ServerCommandService;
 import ru.andreyszdlv.service.command.user.UserCommandService;
-import ru.andreyszdlv.validator.AuthenticationValidator;
 
 import java.util.Scanner;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class Server {
 
-    private final int port;
+    private final ServerCommandService serverCommandService;
 
-    private final ServerCommandService serverCommandService = new ServerCommandService();
+    private final ServerProperties serverProperties;
 
-    public Server(int port) {
-        this.port = port;
-    }
+    private final UserCommandService userCommandService;
 
     public static void main(String[] args) throws InterruptedException {
-        new Server(new ServerConfiguration("application.properties").getPort()).run();
+        ApplicationContext context = new AnnotationConfigApplicationContext(ServerConfiguration.class);
+
+        Server server = context.getBean(Server.class);
+        server.run();
     }
 
     public void run() throws InterruptedException {
@@ -39,9 +45,9 @@ public class Server {
 
         try {
             ServerBootstrap bootstrap = createBootstrap(bossGroup, workerGroup);
-            ChannelFuture future = bootstrap.bind(port).sync();
+            ChannelFuture future = bootstrap.bind(serverProperties.getPort()).sync();
 
-            log.info("The server is running on port: {}", port);
+            log.info("The server is running on port: {}", serverProperties.getPort());
             commandListener();
 
             future.channel().close().sync();
@@ -60,7 +66,7 @@ public class Server {
                         socketChannel.pipeline().addLast(
                                 new StringDecoder(),
                                 new StringEncoder(),
-                                new CommandHandler(new UserCommandService(new AuthenticationValidator(RepositoryFactory.getUserRepository())))
+                                new CommandHandler(userCommandService)
                         );
                     }
                 });
