@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.andreyszdlv.enums.UserCommandType;
-import ru.andreyszdlv.util.MessageProviderUtil;
+import ru.andreyszdlv.service.MessageService;
 import ru.andreyszdlv.validator.AuthenticationValidator;
 import ru.andreyszdlv.validator.CommandValidator;
 
@@ -17,18 +17,17 @@ import java.util.List;
 public class UserCommandService {
 
     private final List<UserCommandHandler> commands;
-
     private final AuthenticationValidator authenticationValidator;
-
     private final CommandValidator commandValidator;
+    private final MessageService messageService;
 
     public void dispatch(ChannelHandlerContext ctx, String fullCommand) {
         String trimmedCommand = fullCommand.trim();
         log.info("Received command: {}", trimmedCommand);
 
-        if(!commandValidator.validate(trimmedCommand)) {
+        if (!commandValidator.validate(trimmedCommand)) {
             log.warn("Invalid command received: \"{}\"", trimmedCommand);
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.invalid_command", trimmedCommand));
+            messageService.sendMessageByKey(ctx, "error.invalid_command", trimmedCommand);
             return;
         }
 
@@ -41,7 +40,7 @@ public class UserCommandService {
                 && !authenticationValidator.isAuthenticated(ctx.channel())) {
             log.warn("Unauthorized access \"{}\" command by channelID \"{}\"",
                     command, ctx.channel().id().asLongText());
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.invalid_authentication"));
+            messageService.sendMessageByKey(ctx, "error.invalid_authentication");
             return;
         }
 

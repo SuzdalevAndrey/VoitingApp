@@ -15,7 +15,6 @@ import ru.andreyszdlv.util.ParamUtil;
 public class LoginUserCommand implements UserCommandHandler {
 
     private final UserService userService;
-
     private final MessageService messageService;
 
     @Override
