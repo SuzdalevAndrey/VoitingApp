@@ -35,10 +35,10 @@ class VoteAnswerServiceTest {
     VoteAnswerService voteAnswerService;
 
     @Test
-    void answer_SendErrorMessage_WhenAnswerNotNumber() {
+    void answer_SendErrorMessage_WhenProcessVoteAnswerNotNumber() {
         String answer = "one";
 
-        voteAnswerService.answer(ctx, answer);
+        voteAnswerService.processVoteAnswer(ctx, answer);
 
         verify(ctx, times(1))
                 .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.invalid"));
@@ -47,10 +47,10 @@ class VoteAnswerServiceTest {
     }
 
     @Test
-    void answer_SendErrorMessage_WhenOptionNegative() {
+    void processVoteAnswer_SendErrorMessage_WhenOptionNegative() {
         String answer = "-1";
 
-        voteAnswerService.answer(ctx, answer);
+        voteAnswerService.processVoteAnswer(ctx, answer);
 
         verify(ctx, times(1))
                 .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.negative"));
@@ -59,10 +59,10 @@ class VoteAnswerServiceTest {
     }
 
     @Test
-    void answer_SendErrorMessage_WhenOptionZero() {
+    void processVoteAnswer_SendErrorMessage_WhenOptionZero() {
         String answer = "0";
 
-        voteAnswerService.answer(ctx, answer);
+        voteAnswerService.processVoteAnswer(ctx, answer);
 
         verify(ctx, times(1))
                 .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.negative"));
@@ -70,12 +70,12 @@ class VoteAnswerServiceTest {
     }
 
     @Test
-    void answer_SendErrorMessage_WhenOptionExceedsAnswerOptionsSize() {
+    void answer_SendErrorMessage_WhenOptionExceedsProcessVoteAnswerOptionsSize() {
         String answer = "2";
         List<AnswerOption> options = List.of(mock(AnswerOption.class));
         when(vote.getAnswerOptions()).thenReturn(options);
 
-        voteAnswerService.answer(ctx, answer);
+        voteAnswerService.processVoteAnswer(ctx, answer);
 
         verify(ctx, times(1))
                 .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.invalid"));
@@ -85,7 +85,7 @@ class VoteAnswerServiceTest {
     }
 
     @Test
-    void answer_SendErrorMessage_WhenUserAlreadyVoted() {
+    void processVoteAlreadyVoted() {
         String answer = "1";
         String userName = "user";
         Channel channel = mock(Channel.class);
@@ -101,7 +101,7 @@ class VoteAnswerServiceTest {
         when(userRepository.findUserByChannelId("channelId")).thenReturn(userName);
         when(voteOption.getVotedUsers()).thenReturn(votedUsers);
 
-        voteAnswerService.answer(ctx, answer);
+        voteAnswerService.processVoteAnswer(ctx, answer);
 
         verify(ctx, times(1))
                 .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.already_choose"));
@@ -112,7 +112,7 @@ class VoteAnswerServiceTest {
     }
 
     @Test
-    void answer_AddUserToVotedUsersAndSendSuccess_WhenValidInput() {
+    void processVoteToVotedUsersAndSendSuccess_WhenValidInput() {
         String answer = "1";
         String userName = "user";
         Channel channel = mock(Channel.class);
@@ -129,7 +129,7 @@ class VoteAnswerServiceTest {
         when(voteOption.getVotedUsers()).thenReturn(votedUsers);
         when(ctx.pipeline()).thenReturn(pipeline);
 
-        voteAnswerService.answer(ctx, answer);
+        voteAnswerService.processVoteAnswer(ctx, answer);
 
         verify(voteOption, times(1)).getVotedUsers();
         verify(userRepository, times(1)).findUserByChannelId("channelId");

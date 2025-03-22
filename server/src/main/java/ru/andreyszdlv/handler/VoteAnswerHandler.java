@@ -16,7 +16,7 @@ public class VoteAnswerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String answer) {
-        voteAnswerService.answer(ctx, answer);
+        voteAnswerService.processVoteAnswer(ctx, answer);
     }
 
     @Override
