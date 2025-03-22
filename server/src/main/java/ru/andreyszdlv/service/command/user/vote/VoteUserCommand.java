@@ -46,7 +46,7 @@ public class VoteUserCommand implements UserCommandHandler {
 
         Vote vote = topicOpt.get().getVoteByName(voteName).get();
 
-        sendVoteOptions(ctx, vote);
+        messageService.sendMessage(ctx, formatVoteOptions(vote));
 
         log.info("Sending vote options to user and switching to VoteAnswerHandler");
         handlerService.switchHandler(ctx, handlerFactory.createVoteAnswerHandler(vote));
@@ -57,7 +57,7 @@ public class VoteUserCommand implements UserCommandHandler {
         return UserCommandType.VOTE;
     }
 
-    private void sendVoteOptions(ChannelHandlerContext ctx, Vote vote){
+    private String formatVoteOptions(Vote vote){
         StringBuilder response = new StringBuilder("Варианты ответа:\n");
         List<AnswerOption> options = vote.getAnswerOptions();
 
@@ -65,7 +65,6 @@ public class VoteUserCommand implements UserCommandHandler {
             response.append(String.format("Вариант #%d: %s\n", (i + 1), options.get(i).getAnswer()));
         }
         response.append(MessageProviderUtil.getMessage("command.vote.success"));
-
-        ctx.writeAndFlush(response.toString());
+        return response.toString();
     }
 }
