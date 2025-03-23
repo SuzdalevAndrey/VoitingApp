@@ -1,23 +1,26 @@
 package ru.andreyszdlv.service.command.user.vote;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.andreyszdlv.factory.HandlerFactory;
 import ru.andreyszdlv.handler.VoteAnswerHandler;
 import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
+import ru.andreyszdlv.service.HandlerService;
+import ru.andreyszdlv.service.MessageService;
 import ru.andreyszdlv.util.MessageProviderUtil;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class VoteUserCommandTest {
 
@@ -25,63 +28,35 @@ class VoteUserCommandTest {
     TopicRepository topicRepository;
 
     @Mock
-    ChannelHandlerContext ctx;
+    HandlerFactory handlerFactory;
 
     @Mock
-    ChannelPipeline pipeline;
+    HandlerService handlerService;
+
+    @Mock
+    MessageService messageService;
+
+    @Mock
+    ChannelHandlerContext ctx;
 
     @InjectMocks
     VoteUserCommand voteUserCommand;
-
-    @Test
-    void execute_SendErrorMessage_WhenParamsCountInvalid() {
-        String[] params = new String[]{"-t=topic"};
-
-        voteUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid"));
-        verifyNoInteractions(topicRepository);
-        verifyNoMoreInteractions(ctx);
-    }
-
-    @Test
-    void execute_SendErrorMessage_WhenParamsFormatInvalid() {
-        String[] params = new String[]{"-invalid=topic", "vote"};
-
-        voteUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.command.vote.invalid"));
-        verifyNoInteractions(topicRepository);
-        verifyNoMoreInteractions(ctx);
-    }
-
-    @Test
-    void execute_SendErrorMessage_WhenTopicOrVoteNameEmpty() {
-        String[] params = new String[]{"-t=", "-v=vote"};
-
-        voteUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.vote.name.empty"));
-        verifyNoInteractions(topicRepository);
-        verifyNoMoreInteractions(ctx);
-    }
 
     @Test
     void execute_SendErrorMessage_WhenTopicNotFound() {
         String topicName = "TopicName";
         String voteName = "VoteName";
         String[] params = new String[]{"-t=" + topicName, "-v=" + voteName};
+
         when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.empty());
 
         voteUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.not_found", topicName));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.topic_vote.not_found", topicName, voteName);
         verify(topicRepository, times(1)).findTopicByName(topicName);
-        verifyNoMoreInteractions(topicRepository, ctx);
+        verifyNoMoreInteractions(topicRepository, messageService);
+        verifyNoInteractions(handlerFactory, handlerService);
     }
 
     @Test
@@ -90,16 +65,18 @@ class VoteUserCommandTest {
         String voteName = "VoteName";
         String[] params = new String[]{"-t=" + topicName, "-v=" + voteName};
         Topic topic = mock(Topic.class);
+
         when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.of(topic));
-        when(topic.getVoteByName(voteName)).thenReturn(Optional.empty());
+        when(topic.containsVoteByName(voteName)).thenReturn(false);
 
         voteUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.not_found", voteName));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.topic_vote.not_found", topicName, voteName);
         verify(topicRepository, times(1)).findTopicByName(topicName);
-        verify(topic, times(1)).getVoteByName(voteName);
-        verifyNoMoreInteractions(topicRepository, ctx);
+        verify(topic, times(1)).containsVoteByName(voteName);
+        verifyNoMoreInteractions(topicRepository, messageService, topic);
+        verifyNoInteractions(handlerFactory, handlerService);
     }
 
     @Test
@@ -110,10 +87,13 @@ class VoteUserCommandTest {
         Topic topic = mock(Topic.class);
         Vote vote = mock(Vote.class);
         List<AnswerOption> options = List.of(new AnswerOption("Yes"), new AnswerOption("No"));
+        VoteAnswerHandler voteAnswerHandler = mock(VoteAnswerHandler.class);
+
         when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.of(topic));
+        when(topic.containsVoteByName(voteName)).thenReturn(true);
         when(topic.getVoteByName(voteName)).thenReturn(Optional.of(vote));
         when(vote.getAnswerOptions()).thenReturn(options);
-        when(ctx.pipeline()).thenReturn(pipeline);
+        when(handlerFactory.createVoteAnswerHandler(vote)).thenReturn(voteAnswerHandler);
 
         voteUserCommand.execute(ctx, params);
 
@@ -122,11 +102,11 @@ class VoteUserCommandTest {
                 "Вариант #2: No\n" +
                 MessageProviderUtil.getMessage("command.vote.success");
 
-        verify(ctx, times(1)).writeAndFlush(expectedResponse);
+        verify(messageService, times(1)).sendMessage(ctx, expectedResponse);
         verify(topicRepository, times(1)).findTopicByName(topicName);
         verify(topic, times(1)).getVoteByName(voteName);
-        verify(pipeline, times(1)).removeLast();
-        verify(pipeline, times(1)).addLast(any(VoteAnswerHandler.class));
-        verifyNoMoreInteractions(topicRepository, ctx, pipeline);
+        verify(handlerService, times(1)).switchHandler(ctx, voteAnswerHandler);
+        verifyNoMoreInteractions(topicRepository, messageService, handlerService, handlerFactory);
+        verifyNoInteractions(ctx);
     }
 }

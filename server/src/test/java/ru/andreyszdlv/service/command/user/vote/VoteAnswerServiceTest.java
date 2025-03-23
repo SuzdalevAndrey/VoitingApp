@@ -1,16 +1,20 @@
 package ru.andreyszdlv.service.command.user.vote;
 
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.andreyszdlv.factory.HandlerFactory;
 import ru.andreyszdlv.handler.CommandHandler;
 import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Vote;
-import ru.andreyszdlv.repo.UserRepository;
-import ru.andreyszdlv.util.MessageProviderUtil;
+import ru.andreyszdlv.service.HandlerService;
+import ru.andreyszdlv.service.MessageService;
+import ru.andreyszdlv.service.UserService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +27,16 @@ import static org.mockito.Mockito.*;
 class VoteAnswerServiceTest {
 
     @Mock
-    UserRepository userRepository;
+    UserService userService;
+
+    @Mock
+    HandlerFactory handlerFactory;
+
+    @Mock
+    MessageService messageService;
+
+    @Mock
+    HandlerService handlerService;
 
     @Mock
     ChannelHandlerContext ctx;
@@ -34,16 +47,21 @@ class VoteAnswerServiceTest {
     @InjectMocks
     VoteAnswerService voteAnswerService;
 
+    @BeforeEach
+    void setUp() {
+        voteAnswerService.setVote(vote);
+    }
+
     @Test
-    void answer_SendErrorMessage_WhenProcessVoteAnswerNotNumber() {
+    void processVoteAnswer_SendErrorMessage_WhenAnswerNotNumber() {
         String answer = "one";
 
         voteAnswerService.processVoteAnswer(ctx, answer);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.invalid"));
-        verifyNoInteractions(userRepository);
-        verifyNoMoreInteractions(ctx);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.option.invalid");
+        verifyNoInteractions(userService, ctx, handlerFactory, handlerService);
+        verifyNoMoreInteractions(messageService);
     }
 
     @Test
@@ -52,10 +70,10 @@ class VoteAnswerServiceTest {
 
         voteAnswerService.processVoteAnswer(ctx, answer);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.negative"));
-        verifyNoInteractions(userRepository);
-        verifyNoMoreInteractions(ctx);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.option.negative");
+        verifyNoInteractions(userService, ctx, handlerFactory, handlerService);
+        verifyNoMoreInteractions(messageService);
     }
 
     @Test
@@ -64,80 +82,80 @@ class VoteAnswerServiceTest {
 
         voteAnswerService.processVoteAnswer(ctx, answer);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.negative"));
-        verifyNoInteractions(userRepository);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.option.negative");
+        verifyNoInteractions(userService, ctx, handlerFactory, handlerService);
+        verifyNoMoreInteractions(messageService);
     }
 
     @Test
-    void answer_SendErrorMessage_WhenOptionExceedsProcessVoteAnswerOptionsSize() {
+    void processVoteAnswer_SendErrorMessage_WhenOptionExceedsOptionsSize() {
         String answer = "2";
         List<AnswerOption> options = List.of(mock(AnswerOption.class));
+
         when(vote.getAnswerOptions()).thenReturn(options);
 
         voteAnswerService.processVoteAnswer(ctx, answer);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.invalid"));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.option.invalid");
         verify(vote, times(1)).getAnswerOptions();
-        verifyNoInteractions(userRepository);
-        verifyNoMoreInteractions(ctx, vote);
+        verifyNoInteractions(userService, ctx, handlerFactory, handlerService);
+        verifyNoMoreInteractions(messageService, vote);
     }
 
     @Test
-    void processVoteAlreadyVoted() {
+    void processVote_SendErrorMessage_WhenAlreadyVoted() {
         String answer = "1";
         String userName = "user";
         Channel channel = mock(Channel.class);
-        ChannelId channelId = mock(ChannelId.class);
         AnswerOption voteOption = mock(AnswerOption.class);
         List<AnswerOption> options = List.of(voteOption);
         Set<String> votedUsers = new HashSet<>();
         votedUsers.add(userName);
+
         when(ctx.channel()).thenReturn(channel);
-        when(channel.id()).thenReturn(channelId);
-        when(ctx.channel().id().asLongText()).thenReturn("channelId");
+        when(userService.findUserNameByChannel(channel)).thenReturn(userName);
         when(vote.getAnswerOptions()).thenReturn(options);
-        when(userRepository.findUserByChannelId("channelId")).thenReturn(userName);
         when(voteOption.getVotedUsers()).thenReturn(votedUsers);
 
         voteAnswerService.processVoteAnswer(ctx, answer);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.option.already_choose"));
-        verify(userRepository, times(1)).findUserByChannelId("channelId");
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.option.already_choose");
+        verify(userService, times(1)).findUserNameByChannel(channel);
         verify(vote, times(1)).getAnswerOptions();
         verify(voteOption, times(1)).getVotedUsers();
-        verifyNoMoreInteractions(userRepository, vote, voteOption, ctx);
+        verifyNoMoreInteractions(userService, vote, voteOption, messageService, ctx);
+        verifyNoInteractions(handlerFactory, handlerService);
     }
 
     @Test
-    void processVoteToVotedUsersAndSendSuccess_WhenValidInput() {
+    void processVoteAnswer_VotedUsersAndSendSuccess_WhenValidInput() {
         String answer = "1";
         String userName = "user";
         Channel channel = mock(Channel.class);
-        ChannelId channelId = mock(ChannelId.class);
         AnswerOption voteOption = mock(AnswerOption.class);
         List<AnswerOption> options = List.of(voteOption);
         Set<String> votedUsers = new HashSet<>();
-        ChannelPipeline pipeline = mock(ChannelPipeline.class);
+        CommandHandler commandHandler = mock(CommandHandler.class);
+
         when(ctx.channel()).thenReturn(channel);
-        when(channel.id()).thenReturn(channelId);
-        when(ctx.channel().id().asLongText()).thenReturn("channelId");
         when(vote.getAnswerOptions()).thenReturn(options);
-        when(userRepository.findUserByChannelId("channelId")).thenReturn(userName);
+        when(userService.findUserNameByChannel(channel)).thenReturn(userName);
         when(voteOption.getVotedUsers()).thenReturn(votedUsers);
-        when(ctx.pipeline()).thenReturn(pipeline);
+        when(handlerFactory.createCommandHandler()).thenReturn(commandHandler);
 
         voteAnswerService.processVoteAnswer(ctx, answer);
 
         verify(voteOption, times(1)).getVotedUsers();
-        verify(userRepository, times(1)).findUserByChannelId("channelId");
+        verify(userService, times(1)).findUserNameByChannel(channel);
         verify(vote, times(1)).getAnswerOptions();
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("vote.success", 1));
-        verify(pipeline, times(1)).removeLast();
-        verify(pipeline, times(1)).addLast(any(CommandHandler.class));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "vote.success", 1);
+        verify(handlerService, times(1)).switchHandler(ctx, commandHandler);
+        verify(handlerFactory, times(1)).createCommandHandler();
         assertTrue(votedUsers.contains(userName));
+        verifyNoMoreInteractions(userService, vote, voteOption, messageService, handlerFactory, handlerService);
     }
 }
