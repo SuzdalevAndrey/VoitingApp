@@ -2,7 +2,6 @@ package ru.andreyszdlv.service.command.user;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,8 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.model.Vote;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.repo.UserRepository;
-import ru.andreyszdlv.util.MessageProviderUtil;
+import ru.andreyszdlv.service.MessageService;
+import ru.andreyszdlv.service.UserService;
+import ru.andreyszdlv.validator.VoteValidator;
 
 import java.util.Optional;
 
@@ -25,7 +25,13 @@ class DeleteUserCommandTest {
     TopicRepository topicRepository;
 
     @Mock
-    UserRepository userRepository;
+    UserService userService;
+
+    @Mock
+    VoteValidator voteValidator;
+
+    @Mock
+    MessageService messageService;
 
     @Mock
     ChannelHandlerContext ctx;
@@ -34,51 +40,20 @@ class DeleteUserCommandTest {
     DeleteUserCommand deleteUserCommand;
 
     @Test
-    void execute_SendErrorMessage_WhenCountParamInvalid() {
-        String[] params = new String[]{"-t=TopicName -v=VoteName -thirdParam=invalid"};
-
-        deleteUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.command.delete.invalid"));
-        verifyNoInteractions(topicRepository, userRepository);
-    }
-
-    @Test
-    void execute_SendErrorMessage_WhenParamInvalid() {
-        String[] params = new String[]{"-invalid=TopicName", "-v=VoteName"};
-
-        deleteUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.command.delete.invalid"));
-        verifyNoInteractions(topicRepository, userRepository);
-    }
-
-    @Test
-    void execute_SendErrorMessage_WhenTopicOrVoteNameEmpty() {
-        String[] params = new String[]{"-t=  ", "-v= "};
-
-        deleteUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.vote.name.empty"));
-        verifyNoInteractions(topicRepository, userRepository);
-    }
-
-    @Test
     void execute_SendErrorMessage_WhenTopicNotFound() {
         String topicName = "TopicName";
-        String[] params = new String[]{"-t=" + topicName, "-v=VoteName"};
+        String voteName = "VoteName";
+        String[] params = new String[]{"-t=" + topicName, "-v=" + voteName};
+
         when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.empty());
 
         deleteUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.not_found", topicName));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.topic_vote.not_found", topicName, voteName);
         verify(topicRepository, times(1)).findTopicByName(topicName);
-        verifyNoMoreInteractions(topicRepository);
-        verifyNoInteractions(userRepository);
+        verifyNoMoreInteractions(topicRepository, messageService);
+        verifyNoInteractions(ctx, voteValidator, userService);
     }
 
     @Test
@@ -87,74 +62,73 @@ class DeleteUserCommandTest {
         String voteName = "voteName";
         String[] params = new String[]{"-t=" + topicName, "-v=" + voteName};
         Topic topic = mock(Topic.class);
+
         when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.of(topic));
-        when(topic.getVoteByName(voteName)).thenReturn(Optional.empty());
+        when(topic.containsVoteByName(voteName)).thenReturn(false);
 
         deleteUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.not_found", voteName));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.topic_vote.not_found", topicName, voteName);
         verify(topicRepository, times(1)).findTopicByName(topicName);
-        verify(topic, times(1)).getVoteByName(voteName);
-        verifyNoMoreInteractions(topicRepository);
-        verifyNoInteractions(userRepository);
+        verify(topic, times(1)).containsVoteByName(voteName);
+        verifyNoMoreInteractions(topicRepository, topic, messageService);
+        verifyNoInteractions(ctx, voteValidator, userService);
     }
 
     @Test
     void execute_SendErrorMessage_WhenUserNoCreateVote() {
         String topicName = "topicName";
         String voteName = "voteName";
+        String userName = "userName";
         String[] params = new String[]{"-t=" + topicName, "-v=" + voteName};
         Channel channel = mock(Channel.class);
-        ChannelId channelId = mock(ChannelId.class);
         Topic topic = mock(Topic.class);
         Vote vote = mock(Vote.class);
+
         when(ctx.channel()).thenReturn(channel);
-        when(channel.id()).thenReturn(channelId);
         when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.of(topic));
         when(topic.getVoteByName(voteName)).thenReturn(Optional.of(vote));
-        when(vote.getAuthorName()).thenReturn("AuthorName");
-        when(channelId.asLongText()).thenReturn("channelId");
-        when(userRepository.findUserByChannelId("channelId")).thenReturn("CurrentUser");
+        when(topic.containsVoteByName(voteName)).thenReturn(true);
+        when(voteValidator.isUserAuthorOfVote(vote, userName)).thenReturn(false);
+        when(userService.findUserNameByChannel(channel)).thenReturn(userName);
 
         deleteUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.no_delete", voteName));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.no_delete", voteName);
         verify(topicRepository, times(1)).findTopicByName(topicName);
         verify(topic, times(1)).getVoteByName(voteName);
-        verify(vote, times(1)).getAuthorName();
-        verify(userRepository, times(1)).findUserByChannelId("channelId");
-        verifyNoMoreInteractions(topicRepository, userRepository);
+        verify(userService, times(1)).findUserNameByChannel(channel);
+        verifyNoMoreInteractions(topicRepository, userService, voteValidator, messageService, topic, vote);
     }
 
     @Test
     void execute_DeleteVoteAndSendSuccessMessage_WhenUserCreateVote() {
         String topicName = "topicName";
         String voteName = "voteName";
+        String userName = "userName";
         String[] params = new String[]{"-t=" + topicName, "-v=" + voteName};
         Channel channel = mock(Channel.class);
-        ChannelId channelId = mock(ChannelId.class);
         Topic topic = mock(Topic.class);
         Vote vote = mock(Vote.class);
+
         when(ctx.channel()).thenReturn(channel);
-        when(channel.id()).thenReturn(channelId);
         when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.of(topic));
         when(topic.getVoteByName(voteName)).thenReturn(Optional.of(vote));
-        when(vote.getAuthorName()).thenReturn("CurrentUser");
-        when(channelId.asLongText()).thenReturn("channelId");
-        when(userRepository.findUserByChannelId("channelId")).thenReturn("CurrentUser");
+        when(topic.containsVoteByName(voteName)).thenReturn(true);
+        when(userService.findUserNameByChannel(channel)).thenReturn(userName);
+        when(voteValidator.isUserAuthorOfVote(vote, userName)).thenReturn(true);
 
         deleteUserCommand.execute(ctx, params);
 
         verify(topicRepository, times(1)).findTopicByName(topicName);
         verify(topic, times(1)).getVoteByName(voteName);
-        verify(vote, times(1)).getAuthorName();
-        verify(userRepository, times(1)).findUserByChannelId("channelId");
+        verify(userService, times(1)).findUserNameByChannel(channel);
         verify(topicRepository, times(1)).removeVote(topicName, voteName);
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("command.delete.success", voteName));
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "command.delete.success", voteName);
 
-        verifyNoMoreInteractions(topicRepository, userRepository);
+        verifyNoMoreInteractions(topicRepository, userService, voteValidator, messageService, topic, vote);
     }
 }
