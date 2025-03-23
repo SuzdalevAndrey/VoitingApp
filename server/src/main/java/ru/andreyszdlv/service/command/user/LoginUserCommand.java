@@ -23,14 +23,14 @@ public class LoginUserCommand implements UserCommandHandler {
 
         String username = ParamUtil.extractValueByPrefix(paramsCommand[0], "-u=");
 
-        if (userService.createUserIfNotExist(ctx.channel(), username)) {
-            log.info("User \"{}\" successfully logged", username);
-            messageService.sendMessageByKey(ctx, "command.login.success", username);
+        if (!userService.createUserIfNotExist(ctx.channel(), username)) {
+            log.warn("User '{}' already exists", username);
+            messageService.sendMessageByKey(ctx, "error.user.already_exist", username);
             return;
         }
 
-        log.warn("User '{}' already exists", username);
-        messageService.sendMessageByKey(ctx, "error.user.already_exist", username);
+        log.info("User \"{}\" successfully logged", username);
+        messageService.sendMessageByKey(ctx, "command.login.success", username);
     }
 
     @Override
