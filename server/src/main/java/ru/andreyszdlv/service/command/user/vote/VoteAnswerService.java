@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import ru.andreyszdlv.factory.HandlerFactory;
 import ru.andreyszdlv.model.AnswerOption;
 import ru.andreyszdlv.model.Vote;
-import ru.andreyszdlv.repo.UserRepository;
 import ru.andreyszdlv.service.HandlerService;
 import ru.andreyszdlv.service.MessageService;
+import ru.andreyszdlv.service.UserService;
 
 import java.util.List;
 import java.util.Set;
@@ -22,7 +22,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class VoteAnswerService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final HandlerFactory handlerFactory;
     private final MessageService messageService;
     private final HandlerService handlerService;
@@ -55,7 +55,7 @@ public class VoteAnswerService {
             return;
         }
 
-        String userName = userRepository.findUserByChannelId(ctx.channel().id().asLongText());
+        String userName = userService.findUserNameByChannel(ctx.channel());
         Set<String> votedUsers = answerOptions.get(option - 1).getVotedUsers();
 
         if (votedUsers.contains(userName)) {
