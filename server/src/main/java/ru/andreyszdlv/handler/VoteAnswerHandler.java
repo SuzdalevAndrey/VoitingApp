@@ -11,7 +11,6 @@ import ru.andreyszdlv.service.command.user.vote.VoteAnswerService;
 public class VoteAnswerHandler extends SimpleChannelInboundHandler<String> {
 
     private final VoteAnswerService voteAnswerService;
-
     private final UserCommandService userCommandService;
 
     @Override

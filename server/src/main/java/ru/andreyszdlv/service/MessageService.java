@@ -11,7 +11,7 @@ public class MessageService {
         ctx.writeAndFlush(MessageProviderUtil.getMessage(messageKey, args));
     }
 
-    public void sendMessage(ChannelHandlerContext ctx, String message){
+    public void sendMessage(ChannelHandlerContext ctx, String message) {
         ctx.writeAndFlush(message);
     }
 }

@@ -14,5 +14,4 @@ public class ServerProperties {
 
     @Value("${server.port}")
     private int port;
-
 }

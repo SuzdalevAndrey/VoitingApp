@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerOption {
+
     private String answer;
 
     private final Set<String> votedUsers = ConcurrentHashMap.newKeySet();

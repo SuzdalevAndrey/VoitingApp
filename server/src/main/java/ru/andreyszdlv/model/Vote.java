@@ -20,7 +20,7 @@ public class Vote {
     private List<AnswerOption> answerOptions;
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("Голосование: ").append(name).append("\n")
                 .append("Тема: ").append(description).append("\n")

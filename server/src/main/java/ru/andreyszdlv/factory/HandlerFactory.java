@@ -16,9 +16,7 @@ import ru.andreyszdlv.service.command.user.vote.VoteAnswerService;
 public class HandlerFactory {
 
     private final ObjectProvider<UserCommandService> userCommandService;
-
     private final ObjectProvider<VoteAnswerService> voteAnswerService;
-
     private final ObjectProvider<VoteCreationService> voteCreationService;
 
     public CommandHandler createCommandHandler() {
