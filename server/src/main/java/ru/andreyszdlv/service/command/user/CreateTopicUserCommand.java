@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.andreyszdlv.enums.UserCommandType;
 import ru.andreyszdlv.service.MessageService;
 import ru.andreyszdlv.service.TopicService;
-import ru.andreyszdlv.util.MessageProviderUtil;
 import ru.andreyszdlv.util.ParamUtil;
 
 @Slf4j
@@ -26,9 +25,10 @@ public class CreateTopicUserCommand implements UserCommandHandler {
 
         if (!topicService.createTopicIfNotExists(topicName)) {
             log.warn("Topic \"{}\" already exists", topicName);
-            ctx.writeAndFlush(MessageProviderUtil.getMessage("error.topic.already_exist", topicName));
+            messageService.sendMessageByKey(ctx, "error.topic.already_exist", topicName);
             return;
         }
+
         messageService.sendMessageByKey(ctx, "command.create_topic.success", topicName);
     }
 

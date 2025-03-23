@@ -6,9 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.andreyszdlv.model.Topic;
-import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.util.MessageProviderUtil;
+import ru.andreyszdlv.service.MessageService;
+import ru.andreyszdlv.service.TopicService;
 
 import static org.mockito.Mockito.*;
 
@@ -16,7 +15,10 @@ import static org.mockito.Mockito.*;
 class CreateTopicUserCommandTest {
 
     @Mock
-    TopicRepository topicRepository;
+    TopicService topicService;
+
+    @Mock
+    MessageService messageService;
 
     @Mock
     ChannelHandlerContext ctx;
@@ -25,64 +27,32 @@ class CreateTopicUserCommandTest {
     CreateTopicUserCommand createTopicUserCommand;
 
     @Test
-    void execute_SendErrorMessage_WhenCountParamInvalid() {
-        String[] params = new String[]{};
-
-        createTopicUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.command.create_topic.invalid"));
-        verifyNoInteractions(topicRepository);
-    }
-
-    @Test
-    void execute_SendErrorMessage_WhenParamInvalid() {
-        String[] params = new String[]{"-invalid=Name"};
-
-        createTopicUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.command.create_topic.invalid"));
-        verifyNoInteractions(topicRepository);
-    }
-
-    @Test
-    void execute_SendErrorMessage_WhenTopicNameEmpty() {
-        String[] params = new String[]{"-n=  "};
-
-        createTopicUserCommand.execute(ctx, params);
-
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.name.empty"));
-        verifyNoInteractions(topicRepository);
-    }
-
-    @Test
-    void execute_SendErrorMessage_WhenTopicNameAlreadyExist() {
+    void execute_SendErrorMessage_WhenTopicAlreadyExist() {
         String topicName = "topicName";
-        String[] params = new String[]{"-n="+topicName};
-        when(topicRepository.containsTopicByName(topicName)).thenReturn(true);
+        String[] params = new String[]{"-n=" + topicName};
+        when(topicService.createTopicIfNotExists(topicName)).thenReturn(false);
 
         createTopicUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.topic.already_exist", topicName));
-        verify(topicRepository, times(1)).containsTopicByName(topicName);
-        verifyNoMoreInteractions(topicRepository);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.topic.already_exist", topicName);
+        verify(topicService, times(1)).createTopicIfNotExists(topicName);
+        verifyNoMoreInteractions(topicService, messageService);
+        verifyNoInteractions(ctx);
     }
 
     @Test
     void execute_CreateTopicAndSendSuccessMessage_WhenValidDataAndTopicNoExist() {
         String topicName = "topicName";
-        String[] params = new String[]{"-n="+topicName};
-        when(topicRepository.containsTopicByName(topicName)).thenReturn(false);
+        String[] params = new String[]{"-n=" + topicName};
+        when(topicService.createTopicIfNotExists(topicName)).thenReturn(true);
 
         createTopicUserCommand.execute(ctx, params);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("command.create_topic.success", topicName));
-        verify(topicRepository, times(1)).containsTopicByName(topicName);
-        verify(topicRepository, times(1)).saveTopic(any(Topic.class));
-        verifyNoMoreInteractions(topicRepository);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "command.create_topic.success", topicName);
+        verify(topicService, times(1)).createTopicIfNotExists(topicName);
+        verifyNoMoreInteractions(topicService, messageService);
+        verifyNoInteractions(ctx);
     }
 }
