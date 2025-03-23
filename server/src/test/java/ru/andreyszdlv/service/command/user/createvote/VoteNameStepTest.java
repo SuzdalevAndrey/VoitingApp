@@ -4,10 +4,14 @@ import io.netty.channel.ChannelHandlerContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.andreyszdlv.model.Topic;
 import ru.andreyszdlv.repo.TopicRepository;
-import ru.andreyszdlv.util.MessageProviderUtil;
+import ru.andreyszdlv.service.MessageService;
+
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -18,6 +22,9 @@ class VoteNameStepTest {
     TopicRepository topicRepository;
 
     @Mock
+    MessageService messageService;
+
+    @Mock
     VoteCreationService voteCreationService;
 
     @Mock
@@ -25,11 +32,12 @@ class VoteNameStepTest {
 
     final String topicName = "TopicName";
 
+    @InjectMocks
     VoteNameStep voteNameStep;
 
     @BeforeEach
     void setUp() {
-//        voteNameStep = new VoteNameStep(topicRepository, topicName);
+        voteNameStep.setTopicName(topicName);
     }
 
     @Test
@@ -38,38 +46,43 @@ class VoteNameStepTest {
 
         voteNameStep.execute(ctx, voteName, voteCreationService);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.name.empty"));
-        verifyNoMoreInteractions(ctx);
-        verifyNoInteractions(voteCreationService);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.name.empty");
+        verifyNoMoreInteractions(messageService);
+        verifyNoInteractions(voteCreationService, ctx, topicRepository);
     }
 
     @Test
     void execute_SendErrorMessage_WhenVoteAlreadyExists() {
         String voteName = "VoteName";
-        when(topicRepository.containsVoteByTopicNameAndVoteName(topicName, voteName)).thenReturn(true);
+        Topic topic = mock(Topic.class);
+
+        when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.ofNullable(topic));
+        when(topic.containsVoteByName(voteName)).thenReturn(true);
 
         voteNameStep.execute(ctx, voteName, voteCreationService);
 
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("error.vote.already_exist", voteName));
-        verifyNoInteractions(voteCreationService);
-        verifyNoMoreInteractions(ctx);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "error.vote.already_exist", voteName);
+        verifyNoInteractions(voteCreationService, ctx);
+        verifyNoMoreInteractions(messageService, topicRepository);
     }
 
     @Test
     void execute_SetVoteNameAndProceedToNextStep_WhenVoteNameValid() {
         String voteName = "newVote";
-        String message = "   " + voteName;
-        when(topicRepository.containsVoteByTopicNameAndVoteName(topicName, voteName)).thenReturn(false);
+        Topic topic = mock(Topic.class);
 
-        voteNameStep.execute(ctx, message, voteCreationService);
+        when(topicRepository.findTopicByName(topicName)).thenReturn(Optional.ofNullable(topic));
+        when(topic.containsVoteByName(voteName)).thenReturn(false);
+
+        voteNameStep.execute(ctx, voteName, voteCreationService);
 
         verify(voteCreationService, times(1)).setVoteName(voteName);
         verify(voteCreationService, times(1)).nextStep();
-        verify(ctx, times(1))
-                .writeAndFlush(MessageProviderUtil.getMessage("vote.description"));
-        verifyNoMoreInteractions(ctx);
-        verifyNoMoreInteractions(voteCreationService);
+        verify(messageService, times(1))
+                .sendMessageByKey(ctx, "vote.description");
+        verifyNoMoreInteractions(voteCreationService, messageService, topicRepository);
+        verifyNoInteractions(ctx);
     }
 }
