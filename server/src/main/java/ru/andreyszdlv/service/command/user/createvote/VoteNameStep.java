@@ -38,7 +38,7 @@ public class VoteNameStep implements VoteStepStrategy {
 
         Optional<Topic> topicOpt = topicRepository.findTopicByName(topicName);
 
-        if (topicOpt.isEmpty() || !topicOpt.get().containsVoteByName(voteName)) {
+        if (topicOpt.isEmpty() || topicOpt.get().containsVoteByName(voteName)) {
             log.warn("Vote \"{}\" already exists for topic \"{}\"", voteName, topicName);
             messageService.sendMessageByKey(ctx, "error.vote.already_exist", voteName);
             return;
