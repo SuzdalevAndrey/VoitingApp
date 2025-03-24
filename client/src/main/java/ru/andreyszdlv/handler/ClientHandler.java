@@ -1,4 +1,4 @@
-package ru.andreyszdlv;
+package ru.andreyszdlv.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
