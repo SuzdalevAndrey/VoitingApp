@@ -45,6 +45,8 @@ public class VoteCreationService {
     }
 
     public void processInput(ChannelHandlerContext ctx, String message) {
+        message = message.trim();
+
         stepHandlers.get(step).execute(ctx, message, this);
     }
 

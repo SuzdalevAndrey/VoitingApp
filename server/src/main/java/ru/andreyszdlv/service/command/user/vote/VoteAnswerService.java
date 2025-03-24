@@ -32,7 +32,10 @@ public class VoteAnswerService {
 
     public void processVoteAnswer(ChannelHandlerContext ctx, String answer) {
         log.info("Processing vote answer: {}", answer);
+
+        answer = answer.trim();
         int option;
+
         try {
             option = parseVoteOption(answer);
         } catch (NumberFormatException e) {
