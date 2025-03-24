@@ -36,7 +36,7 @@ public class UserCommandService {
                 .findFirst()
                 .get();
 
-        if (!(command.getType() == UserCommandType.LOGIN)
+        if (!(command.getType() == UserCommandType.LOGIN || command.getType() == UserCommandType.HELP)
                 && !authenticationValidator.isAuthenticated(ctx.channel())) {
             log.warn("Unauthorized access \"{}\" command by channelID \"{}\"",
                     command, ctx.channel().id().asLongText());
